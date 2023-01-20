@@ -166,3 +166,30 @@ private void StartNewGame(){}
 Now button's enabled state will be bound to
 generated `CanStartNewGame` property.
 
+### Smart-strings localization support
+
+Define property name in default Smart-string braces.
+
+![image](https://user-images.githubusercontent.com/30902981/213810482-875ad5d0-e5a7-4dd4-adfa-5acb36b54564.png)
+
+Define public properties in your `ViewModel`.
+
+```csharp
+public int WorkerCost => MinionCount.WorkerCost;
+public int MilitaryCost => MinionCount.MilitaryCost;
+public int ScientistCost => MinionCount.ScientistCost;
+```
+
+Define localized string's keys in `text` attribute of your `TextElement`.
+
+```uxml
+
+<ui:Label text="#HireMenuWorkersLabel"/>
+<ui:Label text="#HireMenuMilitaryLabel"/>
+<ui:Label text="#HireMenuScientistsLabel"/>
+```
+
+Proper `LocalizedString`'s variables will automatically created and updated as property value changes.
+
+*For now nested variable is unsupported.
+For example: `{Scientist:{Name}}` will not work and will likely throw error during binding.`*
