@@ -1,3 +1,4 @@
+#if UNITASK
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using UnityEngine.TestTools;
 
 namespace MVVMToolkit.RuntimeTests
 {
-    public class MessagingTests
+    public class AsyncMessagingTests
     {
         private static readonly Type[] MessengerTypes =
             { typeof(StrongReferenceMessenger), typeof(WeakReferenceMessenger) };
@@ -67,3 +68,4 @@ namespace MVVMToolkit.RuntimeTests
     {
     }
 }
+#endif
