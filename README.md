@@ -5,21 +5,25 @@ Model-View-ViewModel Toolkit for using with Unity Entities.
 Main goal of this project -
 bring CommunityToolkit.MVVMToolkit support into Unity ECS.
 
-Read more about it:
+[Read more about CommunityToolkit.MVVM](https://learn.microsoft.com/en-us/windows/communitytoolkit/mvvm/introduction)
 
-https://learn.microsoft.com/en-us/windows/communitytoolkit/mvvm/introduction
+## Table of contents
+
+- [General requirements](#general-requirements)
+- [Make a basic view](#make-a-basic-view)
+- [Enabling/Disabling View](#enablingdisabling-view)
 
 ## How to:
 
-### General requirements:
+### General requirements
 
-* Your scene should have 1 UIDocument game object, so 
-UI Initialization system will automatically use it
+* Your scene should have 1 UIDocument game object, so
+  UI Initialization system will automatically use it
 * UniTask if you need async request message support:
-`UniTaskRequestMessage<T>`, `UniTaskCollectionRequestMessage<T>`.
-You also need to define `UNITASK` in Project Setting's scripting defines.
+  `UniTaskRequestMessage<T>`, `UniTaskCollectionRequestMessage<T>`.
+  You also need to define `UNITASK` in Project Setting's scripting defines.
 
-### Make a basic view:
+### Make a basic view
 
 First we define your view and viewmodel types.
 
@@ -48,7 +52,7 @@ your view is initialized and ready to be displayed.
 
 ### Enabling/Disabling View
 
-This project relies on CommunityToolkit.MVVMToolkit Message system. 
+This project relies on CommunityToolkit.MVVMToolkit Message system.
 
 https://learn.microsoft.com/en-us/windows/communitytoolkit/mvvm/messenger
 
@@ -87,8 +91,8 @@ private static async void Init()
 }
 ```
 
-P.S. `UniTask.Yield()` is called in order to ensure 
-it's called after UI is initialized. This will likely 
+P.S. `UniTask.Yield()` is called in order to ensure
+it's called after UI is initialized. This will likely
 be fixed in the future.
 
 And now your View should be displayed.
@@ -98,3 +102,61 @@ or implement your own message callbacks that will call `Disable()`
 method of your `ViewModel`.
 
 There is also a boolean property `EnabledState` so you can bind it to UI.
+
+## Binding
+
+### Localization text binding
+
+In order to bind `TextElement`'s `text` value to localized string you need:
+1. Create localization string table using Unity's localization package.
+   ![image](https://user-images.githubusercontent.com/30902981/213808156-21abb906-4686-473a-9587-fa5d0e133d65.png)
+2. Assign that table to your View's localization table field.
+3. Assign `text` attribute of `TextElement` in `.uxml` to
+   required key with `#` selector.
+```uxml
+<ui:Button text="#StartNewGame" name="StartNewGame" />
+<ui:Button text="#HowToPlay" name="HowToPlay" />
+<ui:Button text="#Settings" name="Settings" />
+```
+
+Binding automatically updates `text` value on every table change. 
+For example if you switch language.
+
+### Input binding
+
+To bind a button to specific command you will need to
+implement a parameterless void method with `[RelayCommand]` attribute:
+
+```csharp
+[RelayCommand]
+private void StartNewGame()
+{
+}
+```
+
+This will generate an `IRelayCommand StartNewGameCommand` property
+with this `StartNewGame` method as callback.
+
+In associated `.uxml` add `@StartNewGameCommand` to text attribute of your
+button (It doesn't have to be `Button` class, every `TextElement` can be
+bound to commands).
+
+```uxml
+<ui:Button text="#StartNewGame;@StartNewGameCommand" name="StartNewGame"/>
+```
+
+*Different bindings in `text` attribute are separated by `;` character.*
+
+You can also bind button's enabled state to boolean.
+
+```csharp
+[ObservableProperty, NotifyCanExecuteChangedFor(nameof(StartNewGameCommand))]
+private bool _canStartNewGame;
+
+[RelayCommand(CanExecute = nameof(CanStartNewGame))]
+private void StartNewGame(){}
+```
+
+Now button's enabled state will be bound to 
+generated `CanStartNewGame` property.
+
