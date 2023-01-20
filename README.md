@@ -14,6 +14,7 @@ bring CommunityToolkit.MVVMToolkit support into Unity ECS.
 - [Enabling/Disabling View](#enablingdisabling-view)
 - [Localization text binding](#localization-text-binding)
 - [Input binding](#input-binding)
+- [Smart-strings localization support](#smart-strings-localization-support)
 
 ## How to:
 
