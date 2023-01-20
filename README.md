@@ -16,6 +16,12 @@ bring CommunityToolkit.MVVMToolkit support into Unity ECS.
 - [Input binding](#input-binding)
 - [Smart-strings localization support](#smart-strings-localization-support)
 
+## Roadmap
+
+* Tooltip text binding.
+* Nested smart-string.
+* Burst-compatible wrapper for Messenger.
+
 ## How to:
 
 ### General requirements
@@ -193,4 +199,4 @@ Define localized string's keys in `text` attribute of your `TextElement`.
 Proper `LocalizedString`'s variables will automatically created and updated as property value changes.
 
 *For now nested variable is unsupported.
-For example: `{Scientist:{Name}}` will not work and will likely throw error during binding.`*
+For example: `{Scientist:{Name}}` will not work and will likely throw error during binding.*
