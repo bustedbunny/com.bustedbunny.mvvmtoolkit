@@ -12,6 +12,8 @@ bring CommunityToolkit.MVVMToolkit support into Unity ECS.
 - [General requirements](#general-requirements)
 - [Make a basic view](#make-a-basic-view)
 - [Enabling/Disabling View](#enablingdisabling-view)
+- [Localization text binding](#localization-text-binding)
+- [Input binding](#input-binding)
 
 ## How to:
 
@@ -108,18 +110,21 @@ There is also a boolean property `EnabledState` so you can bind it to UI.
 ### Localization text binding
 
 In order to bind `TextElement`'s `text` value to localized string you need:
+
 1. Create localization string table using Unity's localization package.
    ![image](https://user-images.githubusercontent.com/30902981/213808156-21abb906-4686-473a-9587-fa5d0e133d65.png)
 2. Assign that table to your View's localization table field.
 3. Assign `text` attribute of `TextElement` in `.uxml` to
    required key with `#` selector.
+
 ```uxml
-<ui:Button text="#StartNewGame" name="StartNewGame" />
-<ui:Button text="#HowToPlay" name="HowToPlay" />
-<ui:Button text="#Settings" name="Settings" />
+
+<ui:Button text="#StartNewGame" name="StartNewGame"/>
+<ui:Button text="#HowToPlay" name="HowToPlay"/>
+<ui:Button text="#Settings" name="Settings"/>
 ```
 
-Binding automatically updates `text` value on every table change. 
+Binding automatically updates `text` value on every table change.
 For example if you switch language.
 
 ### Input binding
@@ -142,6 +147,7 @@ button (It doesn't have to be `Button` class, every `TextElement` can be
 bound to commands).
 
 ```uxml
+
 <ui:Button text="#StartNewGame;@StartNewGameCommand" name="StartNewGame"/>
 ```
 
@@ -157,6 +163,6 @@ private bool _canStartNewGame;
 private void StartNewGame(){}
 ```
 
-Now button's enabled state will be bound to 
+Now button's enabled state will be bound to
 generated `CanStartNewGame` property.
 
