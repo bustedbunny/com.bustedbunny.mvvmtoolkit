@@ -1,0 +1,16 @@
+{
+  "name": "com.bustedbunny.mvptoolkit",
+  "version": "0.2.0",
+  "displayName": "Model-View-Presentation Toolkit",
+  "description": "This is an example package",
+  "unity": "2022.2",
+  "unityRelease": "1f1",
+  "dependencies": {
+    "com.unity.entities": "1.0.0-pre.15",
+    "com.unity.localization": "1.4.2"
+  },
+  "author": {
+    "name": "bustedbunny",
+    "email": "bustedbunny@bk.ru"
+  }
+}
