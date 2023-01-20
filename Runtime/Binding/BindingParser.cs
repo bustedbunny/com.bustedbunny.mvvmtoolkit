@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MVVMToolkit.Binding.Localization;
 using UnityEngine.Localization;
 using UnityEngine.UIElements;
 
