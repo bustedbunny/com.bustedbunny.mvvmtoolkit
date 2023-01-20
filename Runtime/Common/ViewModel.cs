@@ -22,7 +22,7 @@ namespace MVVMToolkit
     }
 
     [ObservableObject]
-    public abstract partial class BaseViewModel : SystemBase, IRecipient<CloseScreensMessage>
+    public abstract partial class BaseViewModel : SystemBase, IRecipient<CloseViewsMessage>
     {
         protected UISingleton UISingleton { get; private set; }
         public VisualElement RootVisualElement { get; private set; }
@@ -102,7 +102,7 @@ namespace MVVMToolkit
         protected virtual void OnDisable() { }
 
 
-        public void Receive(CloseScreensMessage message)
+        public void Receive(CloseViewsMessage message)
         {
             Disable();
         }
