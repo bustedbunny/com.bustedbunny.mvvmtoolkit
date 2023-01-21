@@ -200,3 +200,25 @@ Proper `LocalizedString`'s variables will automatically created and updated as p
 
 *For now nested variable is unsupported.
 For example: `{Scientist:{Name}}` will not work and will likely throw error during binding.*
+
+### Value Changed binding
+
+In order to bind elements with `INotifyValueChanged<T>` you will need to
+use your type's T property name with `0` prefix in binding-path attribute.
+
+```uxml
+<ui:Toggle binding-path="0EnabledState" />
+```
+
+Right now, this type of binding supports only specific types:
+* bool
+* string
+* int
+* float
+* double
+* Vector2
+* Vector3
+* Vector4
+* int2
+* int3
+* int4
