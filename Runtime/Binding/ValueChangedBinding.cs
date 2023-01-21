@@ -12,9 +12,7 @@ namespace MVVMToolkit.Binding
     {
         public override char Symbol() => '0';
 
-        public ValueChangedStore(object binding) : base(binding)
-        {
-        }
+        public ValueChangedStore(object binding) : base(binding) { }
 
         public override void Process(VisualElement element, string key)
         {
@@ -39,36 +37,28 @@ namespace MVVMToolkit.Binding
 
         private ValueChangedBinding CreateSupportedType(Type type, VisualElement element, string key)
         {
+            if (type == typeof(bool))
+                return new ValueChangedBinding<bool>((INotifyValueChanged<bool>)element, bindingContext, key);
             if (type == typeof(string))
                 return new ValueChangedBinding<string>((INotifyValueChanged<string>)element, bindingContext, key);
-
             if (type == typeof(int))
                 return new ValueChangedBinding<int>((INotifyValueChanged<int>)element, bindingContext, key);
-
             if (type == typeof(float))
                 return new ValueChangedBinding<float>((INotifyValueChanged<float>)element, bindingContext, key);
-
             if (type == typeof(double))
                 return new ValueChangedBinding<double>((INotifyValueChanged<double>)element, bindingContext, key);
-
             if (type == typeof(Vector2))
                 return new ValueChangedBinding<Vector2>((INotifyValueChanged<Vector2>)element, bindingContext, key);
-
             if (type == typeof(Vector3))
                 return new ValueChangedBinding<Vector3>((INotifyValueChanged<Vector3>)element, bindingContext, key);
-
             if (type == typeof(Vector4))
                 return new ValueChangedBinding<Vector4>((INotifyValueChanged<Vector4>)element, bindingContext, key);
-
             if (type == typeof(int2))
                 return new ValueChangedBinding<int2>((INotifyValueChanged<int2>)element, bindingContext, key);
-
             if (type == typeof(int3))
                 return new ValueChangedBinding<int3>((INotifyValueChanged<int3>)element, bindingContext, key);
-
             if (type == typeof(int4))
                 return new ValueChangedBinding<int4>((INotifyValueChanged<int4>)element, bindingContext, key);
-
             throw new InvalidOperationException($"Tried to parse type {type.Name} which is not supported.");
         }
     }
