@@ -2,7 +2,7 @@
   "name": "com.bustedbunny.mvptoolkit",
   "version": "0.2.0",
   "displayName": "Model-View-Presentation Toolkit",
-  "description": "This is an example package",
+  "description": "This package brings MVVM to Unity ECS with UI Toolkit.",
   "unity": "2022.2",
   "unityRelease": "1f1",
   "dependencies": {
