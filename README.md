@@ -5,7 +5,7 @@ Model-View-ViewModel Toolkit for using with Unity Entities.
 Main goal of this project -
 bring MVVM into Unity ECS.
 
-[Read more about CommunityToolkit.MVVM](https://learn.microsoft.com/en-us/windows/communitytoolkit/mvvm/introduction)
+[Read more about CommunityToolkit.MVVM](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/mvvm/)
 
 ## Table of contents
 
