@@ -11,8 +11,7 @@ namespace MVVMToolkit
     public partial class UIInitializationSystem : SystemBase
     {
         private readonly UISingleton _uiSingleton = new();
-        private readonly StrongReferenceMessenger _messenger = new();
-        public StrongReferenceMessenger Messenger => _messenger;
+        public StrongReferenceMessenger Messenger { get; } = new();
 
         protected override void OnCreate()
         {
@@ -35,8 +34,7 @@ namespace MVVMToolkit
             if (_uiSingleton.Document is null)
             {
                 var doc = Object.FindObjectOfType<UIDocument>();
-                if (doc is null)
-                    Warning();
+                if (doc is null) Warning();
 
                 _uiSingleton.Document = doc;
             }
@@ -54,7 +52,7 @@ namespace MVVMToolkit
                     var original = view.asset.Instantiate();
                     original.style.flexGrow = 1f;
                     original.pickingMode = PickingMode.Ignore;
-                    viewModel.Bind(new OrderedContainer(original, view.sortLayer), _uiSingleton, view, _messenger);
+                    viewModel.Bind(new OrderedContainer(original, view.sortLayer), _uiSingleton, view, Messenger);
                     viewModel.OnInit();
                     viewModel.PostInit();
 
@@ -68,9 +66,7 @@ namespace MVVMToolkit
             }
         }
 
-        protected override void OnUpdate()
-        {
-        }
+        protected override void OnUpdate() { }
     }
 
     public class OrderedContainer : VisualElement
