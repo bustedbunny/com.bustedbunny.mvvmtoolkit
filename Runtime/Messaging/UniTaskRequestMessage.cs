@@ -1,4 +1,3 @@
-#if UNITASK
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -89,4 +88,3 @@ namespace MVVMToolkit.Messaging
         }
     }
 }
-#endif

@@ -1,38 +1,18 @@
 using System;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
-using UnityEngine.Localization.SmartFormat.Core.Extensions;
 using UnityEngine.Localization.Tables;
 
 namespace MVVMToolkit.Binding.Localization
 {
+    public delegate void TableLoadedEvent();
+
+    /// <summary>
+    /// Table postprocessor provides static event for localization binding to analyze tables before values are evaluated
+    /// and errors about unresolved variables is thrown
+    /// </summary>
     [Serializable]
-    public class Selector : ISource
-    {
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        private static void Init()
-        {
-            var selector = LocalizationSettings.StringDatabase.SmartFormatter.GetSourceExtension<Selector>();
-            if (selector == null)
-                LocalizationSettings.StringDatabase.SmartFormatter.SourceExtensions.Add(new Selector());
-        }
-
-        public bool TryEvaluateSelector(ISelectorInfo selectorInfo)
-        {
-            if (selectorInfo.SelectorText == "#")
-            {
-                selectorInfo.Result = string.Empty;
-                return true;
-            }
-
-            return false;
-        }
-    }
-
-    public delegate void TableLoadedEvent(string tableCollectionName);
-
-    [Serializable]
-    public class TablePostprocessor : ITablePostprocessor
+    internal class TablePostprocessor : ITablePostprocessor
     {
         private static ITablePostprocessor _previousValue;
 
@@ -45,11 +25,24 @@ namespace MVVMToolkit.Binding.Localization
             LocalizationSettings.StringDatabase.SmartFormatter.Parser.AddOperators("#");
         }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ReloadStatic()
+        {
+            if (OnTableLoaded is not null)
+            {
+                var kek = OnTableLoaded.GetInvocationList();
+                foreach (var del in kek)
+                {
+                    OnTableLoaded -= (TableLoadedEvent)del;
+                }
+            }
+        }
+
         public static event TableLoadedEvent OnTableLoaded;
 
         public void PostprocessTable(LocalizationTable table)
         {
-            OnTableLoaded?.Invoke(table.TableCollectionName);
+            OnTableLoaded?.Invoke();
 
             if (_previousValue is not null && _previousValue is not TablePostprocessor)
             {

@@ -1,6 +1,4 @@
 namespace MVVMToolkit.Messaging
 {
-    public class CloseViewsMessage
-    {
-    }
+    public class CloseViewsMessage { }
 }

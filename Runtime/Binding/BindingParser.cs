@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using MVVMToolkit.Binding.Localization;
 using UnityEngine.Localization;
 using UnityEngine.UIElements;
@@ -10,102 +11,101 @@ namespace MVVMToolkit.Binding
     {
         private readonly VisualElement _rootVisualElement;
 
-        private ClickStore _clickStore;
+        private readonly List<List<IBindingParser>> _stores = new();
 
-        private readonly List<IBindingStore> _bindingTextStores = new();
+        private readonly List<IBindingParser> _textStores = new();
+        private readonly List<IBindingParser> _tooltipStores = new();
+        private readonly List<IBindingParser> _viewDataKeyStores = new();
 
-        private readonly List<IBindingStore> _bindingPathStores = new();
-
-        public BindingParser(object model, VisualElement root, LocalizedStringTable table)
+        public BindingParser(INotifyPropertyChanged model, VisualElement root, LocalizedStringTable table)
         {
+            _stores.Add(_textStores);
+            _stores.Add(_tooltipStores);
+            _stores.Add(_viewDataKeyStores);
+
             _rootVisualElement = root;
 
             if (table is not null && !table.IsEmpty)
             {
-                _bindingTextStores.Add(new LocalizationStore(model, table));
+                _textStores.Add(new LocalizationParser(model, table,
+                    static (element, s) => ((TextElement)element).text = s));
+                // _tooltipStores.Add(new LocalizationParser(model, table,
+                //     static (element, s) => element.tooltip = s));
             }
 
-            _bindingTextStores.Add(new ClickStore(model));
+            _textStores.Add(new StringFormatParser(model, static (element, s) => ((TextElement)element).text = s));
+            // _tooltipStores.Add(new StringFormatParser(model, static (element, s) => element.tooltip = s));
 
-            _bindingPathStores.Add(new ValueChangedStore(model));
+            _viewDataKeyStores.Add(new ClickParser(model));
+            _viewDataKeyStores.Add(new ValueChangedParser(model));
+            _viewDataKeyStores.Add(new ReflectionParser(model));
 
             ParseBindings();
         }
 
         private void ParseBindings()
         {
-            ParseText();
-            ParsePath();
+            Parse<TextElement>(_textStores, static element => element.text);
+            Parse<VisualElement>(_tooltipStores, static element => element.tooltip);
+            ParseMultiple<VisualElement>(_viewDataKeyStores, static element => element.viewDataKey);
         }
 
-        private void ParseText()
+        private void ParseMultiple<T>(List<IBindingParser> stores, Func<T, string> keyGetter) where T : VisualElement
         {
-            _rootVisualElement.Query<TextElement>().ForEach((elem) =>
+            _rootVisualElement.Query<T>().ForEach(element =>
             {
-                if (string.IsNullOrEmpty(elem.text)) return;
+                var key = keyGetter(element);
+                if (string.IsNullOrEmpty(key)) return;
 
-                var bindings = elem.text.Replace(" ", "").Split(';');
+                var bindings = BindingUtility.GetFormatKeys(key);
 
-                foreach (var bindingStore in _bindingTextStores)
+                if (bindings is null) return;
+
+                foreach (var binding in bindings)
                 {
-                    foreach (var binding in bindings)
+                    foreach (var store in stores)
                     {
-                        if (binding.StartsWith(bindingStore.Symbol()))
-                        {
-                            bindingStore.Process(elem, GetKey(binding));
-                        }
+                        if (binding.StartsWith(store.Symbol()))
+                            store.Process(element, binding[1..]);
                     }
                 }
             });
-            foreach (var bindingStore in _bindingTextStores)
-            {
-                bindingStore.PostBindingCallback();
-            }
+            PostBindingCallback(stores);
         }
 
-        private void ParsePath()
-        {
-            _rootVisualElement.Query<BindableElement>().ForEach(element =>
-            {
-                if (string.IsNullOrEmpty(element.bindingPath)) return;
 
-                var bindings = element.bindingPath.Split('.');
-                foreach (var bindingStore in _bindingPathStores)
+        private void Parse<T>(List<IBindingParser> stores, Func<T, string> keyGetter) where T : VisualElement
+        {
+            _rootVisualElement.Query<T>().ForEach(element =>
+            {
+                var key = keyGetter(element);
+                if (string.IsNullOrEmpty(key)) return;
+                foreach (var store in stores)
                 {
-                    foreach (var binding in bindings)
-                    {
-                        if (binding.StartsWith(bindingStore.Symbol()))
-                        {
-                            bindingStore.Process(element, GetKey(binding));
-                        }
-                    }
+                    if (key.StartsWith(store.Symbol()))
+                        store.Process(element, key[1..]);
                 }
             });
-
-            foreach (var bindingStore in _bindingPathStores)
-            {
-                bindingStore.PostBindingCallback();
-            }
+            PostBindingCallback(stores);
         }
 
-
-        private static string GetKey(string str) => str.Substring(1, str.Length - 1);
+        private void PostBindingCallback(List<IBindingParser> stores)
+        {
+            foreach (var store in stores)
+            {
+                store.PostBindingCallback();
+            }
+        }
 
         public void Dispose()
         {
-            foreach (var bindingStore in _bindingTextStores)
+            foreach (var stores in _stores)
             {
-                bindingStore.Dispose();
+                foreach (var bindingStore in stores)
+                {
+                    bindingStore.Dispose();
+                }
             }
-
-            _bindingTextStores.Clear();
-
-            foreach (var bindingStore in _bindingPathStores)
-            {
-                bindingStore.Dispose();
-            }
-
-            _bindingPathStores.Clear();
         }
     }
 }

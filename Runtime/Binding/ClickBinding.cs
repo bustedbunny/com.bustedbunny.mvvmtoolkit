@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 using CommunityToolkit.Mvvm.Input;
@@ -6,26 +7,19 @@ using UnityEngine.UIElements;
 
 namespace MVVMToolkit.Binding
 {
-    public class ClickStore : TextBindingStore<ClickBinding>
+    public class ClickParser : BindingParser<ClickBinding>
     {
-        public ClickStore(object viewModel) : base(viewModel) { }
+        public ClickParser(INotifyPropertyChanged viewModel) : base(viewModel) { }
 
         public override char Symbol() => '@';
 
         public override void Process(VisualElement element, string key)
         {
-            try
-            {
-                boundingMap.Add(new ClickBinding(element, bindingContext, key), key);
-            }
-            catch (Exception e)
-            {
-                UnityEngine.Debug.LogException(e);
-            }
+            boundingMap.Add(new ClickBinding(element, bindingContext, key), key);
         }
     }
 
-    public class ClickBinding : IBindable
+    public class ClickBinding : IElementBinding
     {
         public IRelayCommand Command { get; }
         public VisualElement Element { get; }
@@ -67,17 +61,6 @@ namespace MVVMToolkit.Binding
         {
             Command.CanExecuteChanged -= SetCanExecute;
             Element.UnregisterCallback<ClickEvent>(OnClick);
-        }
-    }
-
-    internal static class Throw
-    {
-        public static void ThrowNullOrEmpty(string key)
-        {
-            if (string.IsNullOrEmpty(key))
-            {
-                throw new Exception("Key cannot be null");
-            }
         }
     }
 }

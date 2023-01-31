@@ -1,9 +1,8 @@
 ## About:
 
-Model-View-ViewModel Toolkit for using with Unity Entities.
+Model-View-ViewModel Toolkit for using with Unity's UI Toolkit.
 
-Main goal of this project -
-bring MVVM into Unity ECS.
+Main goal of this project - bring MVVM into UI Toolkit
 
 [Read more about CommunityToolkit.MVVM](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/mvvm/)
 
@@ -18,207 +17,310 @@ bring MVVM into Unity ECS.
 
 ## Roadmap
 
-* Tooltip text binding.
-* Nested smart-string.
+* ~~Tooltip text binding.~~ Tooltips don't work in runtime :(
+* ~~Nested variable support for smart-string~~ Done
 * Burst-compatible wrapper for Messenger.
 
 ## How to:
 
 ### General requirements
 
-* Your scene should have 1 UIDocument game object, so
-  UI Initialization system will automatically use it
-* UniTask if you need async request message support:
-  `UniTaskRequestMessage<T>`, `UniTaskCollectionRequestMessage<T>`.
-  You also need to define `UNITASK` in Project Setting's scripting defines.
+* UniTask
+* '#' and '>' symbols are reserved in Localization package operators
 
 ### Make a basic view
 
-First we define your view and viewmodel types.
+First we define viewmodel type.
 
-By default `ViewModel` is a baseline class to inherit from,
-which inherits from `SystemBase`.
+`ViewModel` is a baseline class to inherit from,
+which inherits from `MonoBehavior`.
 
 ```csharp
-public class MainMenuView : BaseView<MainMenuViewModel>
+public class TestView : BaseView
 {
 }
-public partial class MainMenuViewModel : ViewModel
+public partial class TestViewModel : ViewModel
 {
 }
 ```
 
-Now create a GameObject in scene with `MainMenuView` component
-and attach your uxml file to it.
+Now we create a GameObject in scene with `TestView` and `TestViewModel`
+components and attach our uxml asset to proper field.
 
-*You should also attach string localization table
-if you want localization binding support.*
+In a BindingContext we assign our ViewModel.
 
-![image](https://user-images.githubusercontent.com/30902981/213801532-92c3a31a-5003-43b8-b928-b76720513067.png)
+*We should also attach our string localization table to
+support localization binding.*
 
-And now once you run you game,
-your view is initialized and ready to be displayed.
+![image](https://user-images.githubusercontent.com/30902981/215566294-47771601-5efe-45c4-bff4-2acb03478b04.png)
+
+Now we need to define our UI hierarchy.
+
+We create game object with `UIRoot` component attached.
+
+Here we assign our `UIDocument` we want to use.
+
+*Although it is not required and we can attach `UIDocument` later.
+We can even remove it.
+Our UI hierarchy will be automatically attached to it's root.*
+
+![image](https://user-images.githubusercontent.com/30902981/215566632-06057a9e-b78a-4176-955d-6b03edc4f330.png)
+
+Now we need to assign your `View` game object as a child of `UIRoot`.
+
+![image](https://user-images.githubusercontent.com/30902981/215567898-33314ddf-4d61-41cf-ac78-a771b6979554.png)
+
+So far our scene looks like this and now we need to `Initialize` our `UIRoot`.
+
+Let's create a simple script to do so:
+
+```csharp
+public class UIInitializer : MonoBehaviour
+{
+    // Internally UI is initialized in Awake
+    // Actual initialization should be done at least during Start 
+    void Start()
+    {
+        var root = GetComponent<UIRoot>();
+
+        // We call UIRoot.Initialize method and provide StrongReferenceMessenger and ServiceProvider instances.
+        // If you have external services on which your Views or ViewModels rely you must register them
+        // before calling Initialize.
+        var messenger = new StrongReferenceMessenger();
+        root.Initialize(messenger, new());
+    }
+}
+```
+
+After we attached this script to `UIRoot` we can start PlayMode, but View will not appear.
 
 ### Enabling/Disabling View
 
-This project relies on CommunityToolkit.MVVMToolkit Message system.
+This framework heavily relies on CommunityToolkit.MVVMToolkit Message system.
 
-https://learn.microsoft.com/en-us/windows/communitytoolkit/mvvm/messenger
+[You can read more here.](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/mvvm/messenger)
 
-In order to enable any View you need to implement a message:
+In order to enable any `View` we will need to implement a message:
 
 ```csharp
-public class OpenMainMenuMessage { }
+public class OpenTestViewMessage { }
 ```
 
-Then you will need to subscribe your ViewModel to that message:
+Then we will need to subscribe our `View` to that message. There are several ways to do so:
+
+1. First we can simply inherit from `IRecipient<T>`. Our `View` will be automatically subscribed.
 
 ```csharp
-public partial class MainMenuViewModel : ViewModel, IRecipient<OpenMainMenuMessage>
+public class TestView : BaseView, IRecipient<OpenTestViewMessage>
 {
-    public override void OnInit()
+    // On message receive we will enable our View 
+    public void Receive(OpenTestViewMessage message)
     {
-        Messenger.Register<OpenMainMenuMessage>(this);
-    }
-    public void Receive(OpenMainMenuMessage message)
-    {
-        Enable();
+        enabled = true;
     }
 }
 ```
 
-Now you need to use Messenger and send this message:
+2. Alternatively we can subscribe manually.
 
 ```csharp
-[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-private static async void Init()
+public class TestView : BaseView
 {
-    await UniTask.Yield();
-    var world = World.DefaultGameObjectInjectionWorld;
-    var messenger = world.GetExistingSystemManaged<UIInitializationSystem>().Messenger;
-    messenger.Send<OpenMainMenuMessage>();
+    // You can override OnInit to make manual changes to hierarchy
+    protected override void OnInit()
+    {
+        Messenger.Register<OpenTestViewMessage>(this, (recipient, message) => enabled = true);
+    }
 }
 ```
 
-P.S. `UniTask.Yield()` is called in order to ensure
-it's called after UI is initialized. This will likely
-be fixed in the future.
+Now we need to use Messenger and send this message:
 
-And now your View should be displayed.
+```csharp
+public class UIInitializer : MonoBehaviour
+{
+    void Start()
+    {
+        ...
+        
+        root.Initialize(messenger, new());
+        messenger.Send<OpenTestViewMessage>();
+    }
+}
+```
 
-In order to disable view you can use either built in `CloseViewsMessage`
-or implement your own message callbacks that will call `Disable()`
-method of your `ViewModel`.
+*Messenger should only be used after `UIRoot` is Initialized.*
 
-There is also a boolean property `EnabledState` so you can bind it to UI.
+And now our `View` should be displayed on PlayMode.
+
+In order to disable view we can use either built in `CloseViewsMessage`
+or implement your own message callbacks that will call `enabled = false`
+method of our `View`.
 
 ## Binding
 
 ### Localization text binding
 
-In order to bind `TextElement`'s `text` value to localized string you need:
+In order to bind `TextElement`'s `text` value to localized string we need:
 
 1. Create localization string table using Unity's localization package.
-   ![image](https://user-images.githubusercontent.com/30902981/213808156-21abb906-4686-473a-9587-fa5d0e133d65.png)
 2. Assign that table to your View's localization table field.
 3. Assign `text` attribute of `TextElement` in `.uxml` to
-   required key with `#` selector.
+   required key with `#` operator.
 
-```uxml
+![image](https://user-images.githubusercontent.com/30902981/215570528-f8c66110-0911-47b3-a77c-c572f90898cf.png)
 
-<ui:Button text="#StartNewGame" name="StartNewGame"/>
-<ui:Button text="#HowToPlay" name="HowToPlay"/>
-<ui:Button text="#Settings" name="Settings"/>
+```xml
+
+<ui:Label text="#Text"/>
 ```
 
 Binding automatically updates `text` value on every table change.
-For example if you switch language.
+For example when we switch language or when we modify table in editor.
 
-### Input binding
+### Smart-string binding
 
-To bind a button to specific command you will need to
-implement a parameterless void method with `[RelayCommand]` attribute:
+Now we want to display some variables.
+
+We need to make our Localization entry `Smart` and define variables with `>` operator.
+Variable name must match Property on `BindingContext` (`ViewModel` our `View` is attached to).
+
+![image](https://user-images.githubusercontent.com/30902981/215571532-e4fd0421-7a35-4620-b6a9-eab813faaa31.png)
 
 ```csharp
-[RelayCommand]
-private void StartNewGame()
+public partial class TestViewModel : ViewModel
 {
+    // To bind a simple property, just create a backing field
+    // and attach [ObservableProperty] attribute. TestInt property will be generated.
+    [ObservableProperty] private int _testInt = 12;
 }
 ```
 
-This will generate an `IRelayCommand StartNewGameCommand` property
-with this `StartNewGame` method as callback.
+In our `.uxml` asset we define `text` attribute with entry's key with `#` operator.
 
-In associated `.uxml` add `@StartNewGameCommand` to text attribute of your
-button (It doesn't have to be `Button` class, every `TextElement` can be
-bound to commands).
+```xml
 
-```uxml
-
-<ui:Button text="#StartNewGame;@StartNewGameCommand" name="StartNewGame"/>
+<ui:Label text="#VariableTest"/>
 ```
 
-*Different bindings in `text` attribute are separated by `;` character.*
+Now our `View` will be automatically updated as we change `TestInt` property value.
 
-You can also bind button's enabled state to boolean.
+### Input binding
+
+To bind a button to specific method we will need to
+implement a parameterless void method
+with `[RelayCommand]` attribute or create `ICommand` property ourselves.
+
+Let's create a simple counter:
 
 ```csharp
-[ObservableProperty, NotifyCanExecuteChangedFor(nameof(StartNewGameCommand))]
-private bool _canStartNewGame;
+public partial class TestViewModel : ViewModel
+{
+    // To bind a method to click event you will need ICommand property.
+    // [RelayCommand] will automatically generate it for you.
+    [RelayCommand]
+    private void Increment() => Counter++;
+    [ObservableProperty]
+    private int _counter;
 
-[RelayCommand(CanExecute = nameof(CanStartNewGame))]
-private void StartNewGame(){}
+}
 ```
 
-Now button's enabled state will be bound to
-generated `CanStartNewGame` property.
+In our `.uxml` asset we define `view-data-key` attribute. Each binding needs to be wrapped in braces.
+`ICommand` binding requires `@` operator.
 
-### Smart-strings localization support
+```xml
 
-Define property name in default Smart-string braces.
+<ui:Button text="Counter" view-data-key="{@IncrementCommand}"/>
+```
 
-![image](https://user-images.githubusercontent.com/30902981/213810482-875ad5d0-e5a7-4dd4-adfa-5acb36b54564.png)
-
-Define public properties in your `ViewModel`.
+We can also bind button's enabled state to boolean property, which will be updated automatically.
 
 ```csharp
-public int WorkerCost => MinionCount.WorkerCost;
-public int MilitaryCost => MinionCount.MilitaryCost;
-public int ScientistCost => MinionCount.ScientistCost;
+[RelayCommand(CanExecute = nameof(CanIncrement))]
 ```
-
-Define localized string's keys in `text` attribute of your `TextElement`.
-
-```uxml
-
-<ui:Label text="#HireMenuWorkersLabel"/>
-<ui:Label text="#HireMenuMilitaryLabel"/>
-<ui:Label text="#HireMenuScientistsLabel"/>
-```
-
-Proper `LocalizedString`'s variables will automatically created and updated as property value changes.
-
-*For now nested variable is unsupported.
-For example: `{Scientist:{Name}}` will not work and will likely throw error during binding.*
 
 ### Value Changed binding
 
-In order to bind elements with `INotifyValueChanged<T>` you will need to
-use your type's T property name with `0` prefix in binding-path attribute.
+In order to bind elements with `INotifyValueChanged<T>` we will need to implement a property with
+matching type.
 
-```uxml
-<ui:Toggle binding-path="0EnabledState" />
+Value Changed binding uses `%` operator.
+
+```xml
+
+<ui:IntegerField label="Counter" view-data-key="{%Counter}"/>
 ```
 
-Right now, this type of binding supports only specific types:
-* bool
-* string
-* int
-* float
-* double
-* Vector2
-* Vector3
-* Vector4
-* int2
-* int3
-* int4
+Now `Counter` property value will be mirrored
+if you manually type a value into field.
+
+### Custom Value Changed Type support
+
+To avoid usage of slow reflection non-supported types will need have it's own
+`IGenericsSolver` implementation.
+
+The simplest way to do so,
+create a type which inherits from `GenericsSolver<T>`.
+
+```csharp
+public class MyTypeSolver : GenericsSolver<MyType> { }
+```
+
+*If non-supported property was used you will receive a warning in console.*
+
+### Reflection binding
+
+Sometimes we want to bind something very custom and specific.
+In order to do so we can use reflection binding.
+
+Reflection binding uses `^` operator.
+
+```xml
+
+<ui:Label text="This text font size is bound to Counter" view-data-key="{^style.fontSize=FontSize}"/>
+```
+
+In ViewModel we will need to define matching type.
+
+```csharp
+public partial class TestViewModel : ViewModel
+{
+    // In some scenarios multiple properties can be attached to one backing field.
+    // In this case use [NotifyPropertyChangedFor] attribute
+    [ObservableProperty, NotifyPropertyChangedFor(nameof(FontSize))]
+    private int _counter;
+
+    // This property provides a proper type for VisualElement.style.fontSize for binding
+    public StyleLength FontSize => Counter;
+}
+```
+
+Now as we modify our `Counter` value, this `Label`'s fontSize will
+also change accordingly.
+
+### String format binding
+
+Sometimes we don't need localization and we just want to bind string.
+
+String format binding uses `$` operator.
+
+In `.uxml` we simply define our format the same way as we do in C#.
+Matching properties must exist in bound `ViewModel`.
+
+```xml
+
+<ui:Label text="$Counter={Counter}"/>
+```
+
+### Smart-String nested variables
+
+Nested variables are fully supported.
+
+To define a group we need to use `#` operator and `>` operator for a variable.
+
+![image](https://user-images.githubusercontent.com/30902981/215578142-70b12a58-7132-4e20-87e2-628c8a694f28.png)
+
+With full support we can go fully nuts:
+
+![image](https://user-images.githubusercontent.com/30902981/215578542-9e86061c-3947-44e8-82de-7026b0bf98a2.png)
