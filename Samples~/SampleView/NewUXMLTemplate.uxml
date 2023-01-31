@@ -1,0 +1,21 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements"
+         xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements"
+         noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+         schemaLocation="UnityEngine.UIElements file:/F:/UnityProjects/Packages/ECSMVVMToolkit/UIElementsSchema/UnityEngine.UIElements.xsd"
+         editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1; font-size: 70px;">
+        <ui:Label text="#Text"/>
+        <ui:Label text="#VariableTest"/>
+
+        <ui:Label text="$Counter={Counter}"/>
+        <ui:Button text="Counter" view-data-key="{@IncrementCommand}"/>
+        <ui:IntegerField label="Counter" view-data-key="{%Counter}"/>
+
+        <ui:Label text="This text font size is bound to Counter" view-data-key="{^style.fontSize=FontSize}"/>
+
+        <ui:Button text="Random" view-data-key="{@RandomizeNestedCommand}"/>
+
+        <ui:Label text="#NestedTest"/>
+        <ui:Label text="#AdvancedNestedTest"/>
+    </ui:VisualElement>
+</ui:UXML>

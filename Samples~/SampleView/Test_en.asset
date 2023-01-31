@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Test_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 7b8cfd31915654e46a34ed12caab5bc2, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 6133111651638444037
+  m_TableData:
+  - m_Id: 17014337536
+    m_Localized: This is a test locale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 453178669805568
+    m_Localized: Test int = {>TestInt}
+    m_Metadata:
+      m_Items:
+      - rid: 6133111651638444037
+  - m_Id: 455706732015616
+    m_Localized: Nested float = {#Group>NestedFloat} Nested bool = {#Group>NestedBool}
+    m_Metadata:
+      m_Items:
+      - rid: 6133111651638444037
+  - m_Id: 463677906104320
+    m_Localized: 'Nested float = {#Group:{>NestedFloat} Deep bool = {#Deep:{>NestedBool}
+      Deep float = {>NestedFloat}} } '
+    m_Metadata:
+      m_Items:
+      - rid: 6133111651638444037
+  references:
+    version: 2
+    RefIds:
+    - rid: 6133111651638444037
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 0030a2e1299c01000030e27d769e01000030e26cb6a50100003062c669fb0300
