@@ -12,8 +12,13 @@ Main goal of this project - bring MVVM into UI Toolkit
 - [Make a basic view](#make-a-basic-view)
 - [Enabling/Disabling View](#enablingdisabling-view)
 - [Localization text binding](#localization-text-binding)
+- [Smart-string binding](#smart-string-binding)
 - [Input binding](#input-binding)
-- [Smart-strings localization support](#smart-strings-localization-support)
+- [Value Changed binding](#value-changed-binding)
+- [Custom Value Changed Type support](#custom-value-changed-type-support)
+- [Reflection binding](#reflection-binding)
+- [String format binding](#string-format-binding)
+- [Smart-String nested variables](#smart-string-nested-variables)
 
 ## Roadmap
 
