@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.SmartFormat.Core.Extensions;
+using UnityEngine.Localization.SmartFormat.PersistentVariables;
 
 namespace MVVMToolkit.Binding.Localization.Source
 {
@@ -43,45 +44,41 @@ namespace MVVMToolkit.Binding.Localization.Source
 
         public bool TryEvaluateSelector(ISelectorInfo selectorInfo)
         {
-            var bindingGroup = selectorInfo.CurrentValue as BindingGroup ??
-                               selectorInfo.FormatDetails.OriginalArgs.OfType<BindingGroup>().FirstOrDefault();
-            if (bindingGroup is null)
+            if (selectorInfo.CurrentValue is not BindingGroup bindingGroup)
                 return false;
 
             var symbol = selectorInfo.SelectorOperator;
-
+            if (string.IsNullOrEmpty(symbol) || symbol.Length != 1) return false;
             // # is used for local variables
             if (symbol[0] is '>')
             {
                 if (!bindingGroup.BindVariable(selectorInfo.SelectorText, out var variable)) return false;
-                // Add the variable to the cache
-                var cache = selectorInfo.FormatDetails.FormatCache;
-                if (cache != null)
-                {
-                    if (!cache.VariableTriggers.Contains(variable))
-                        cache.VariableTriggers.Add(variable);
-                }
-
-                selectorInfo.Result = variable.GetSourceValue(selectorInfo);
+                CacheAndSetResult(selectorInfo, variable);
                 return true;
             }
 
             if (symbol[0] is '#')
             {
                 if (!bindingGroup.BindGroup(selectorInfo.SelectorText, out var group)) return false;
-                // Add the variable to the cache
-                var cache = selectorInfo.FormatDetails.FormatCache;
-                if (cache != null)
-                {
-                    if (!cache.VariableTriggers.Contains(group))
-                        cache.VariableTriggers.Add(group);
-                }
 
-                selectorInfo.Result = group.GetSourceValue(selectorInfo);
+                CacheAndSetResult(selectorInfo, group);
                 return true;
             }
 
             return false;
+        }
+
+        private static void CacheAndSetResult(ISelectorInfo info, IVariableValueChanged variable)
+        {
+            // Add the variable to the cache
+            var cache = info.FormatDetails.FormatCache;
+            if (cache != null)
+            {
+                if (!cache.VariableTriggers.Contains(variable))
+                    cache.VariableTriggers.Add(variable);
+            }
+
+            info.Result = variable.GetSourceValue(info);
         }
     }
 }
