@@ -97,7 +97,7 @@ namespace MVVMToolkit.Binding
                     {
                         try
                         {
-                            store.Process(element, key);
+                            store.Process(element, key[1..]);
                         }
                         catch (Exception e)
                         {
