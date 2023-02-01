@@ -43,6 +43,8 @@ namespace MVVMToolkit.Binding
 
             var lenght = paths.Length;
             property = rootType.GetProperty(paths[lenght - 1], BindingFlags.Instance | BindingFlags.Public);
+            if (property is null)
+                throw new BindingException($"Type {rootType.Name} has no property of name {paths[lenght - 1]}.");
         }
 
         public ReflectionBinding(VisualElement element, string key, INotifyPropertyChanged binding)
