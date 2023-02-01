@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 using CommunityToolkit.Mvvm.Input;
+using JetBrains.Annotations;
 using UnityEngine.UIElements;
 
 namespace MVVMToolkit.Binding
@@ -15,20 +16,25 @@ namespace MVVMToolkit.Binding
 
         public override void Process(VisualElement element, string key)
         {
-            boundingMap.Add(new CommandBinding(element, bindingContext, key), key);
+            boundingMap.Add(new(element, bindingContext, key), key);
         }
     }
 
     public class CommandBinding : IElementBinding
     {
-        public IRelayCommand Command { get; }
-        public VisualElement Element { get; }
+        private IRelayCommand Command { get; }
+        private readonly object _argument;
+        private VisualElement Element { get; }
 
         public CommandBinding(VisualElement element, object boundObject, string key)
         {
             Throw.ThrowNullOrEmpty(key);
+
+
             var selectors = key.Split(':');
-            if (selectors.Length > 1) throw new Exception($"Cannot have more than 1 key. Key: {key}");
+            if (selectors.Length > 2) throw new($"Invalid command arguments. Key: {key}");
+
+            Element = element;
 
             BindingUtility.GetTargetObject(boundObject, selectors[0], out var target, out var propertyName);
 
@@ -38,7 +44,12 @@ namespace MVVMToolkit.Binding
 
             Debug.Assert(commandProperty != null, nameof(commandProperty) + " != null");
             Command = (IRelayCommand)commandProperty.GetValue(target);
-            Element = element;
+
+            if (selectors.Length == 2)
+            {
+                _argument = ParseArgument(selectors[1]);
+            }
+
 
             element.RegisterCallback<ClickEvent>(OnClick);
             Command.CanExecuteChanged += SetCanExecute;
@@ -46,14 +57,19 @@ namespace MVVMToolkit.Binding
             SetCanExecute(null, null);
         }
 
-        private void OnClick(ClickEvent evt)
+        private static object ParseArgument(string key)
         {
-            Command.Execute(null);
+            if (bool.TryParse(key, out var boolResult)) return boolResult;
+            if (int.TryParse(key, out var intResult)) return intResult;
+            if (float.TryParse(key, out var floatResult)) return floatResult;
+            return key;
         }
+
+        private void OnClick(ClickEvent evt) => Command.Execute(_argument);
 
         private void SetCanExecute(object sender, EventArgs eventArgs)
         {
-            Element.SetEnabled(Command.CanExecute(null));
+            Element.SetEnabled(Command.CanExecute(_argument));
         }
 
 
