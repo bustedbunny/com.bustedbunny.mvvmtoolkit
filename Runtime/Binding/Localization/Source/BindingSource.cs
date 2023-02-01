@@ -44,8 +44,18 @@ namespace MVVMToolkit.Binding.Localization.Source
 
         public bool TryEvaluateSelector(ISelectorInfo selectorInfo)
         {
-            if (selectorInfo.CurrentValue is not BindingGroup bindingGroup)
-                return false;
+            var bindingGroup = selectorInfo.CurrentValue as BindingGroup;
+            if (bindingGroup is null && selectorInfo.FormatDetails?.OriginalArgs is not null)
+            {
+                foreach (var arg in selectorInfo.FormatDetails.OriginalArgs)
+                {
+                    if (arg is not BindingGroup group) continue;
+                    bindingGroup = group;
+                    break;
+                }
+            }
+            else return false;
+
 
             var symbol = selectorInfo.SelectorOperator;
             if (string.IsNullOrEmpty(symbol) || symbol.Length != 1) return false;
