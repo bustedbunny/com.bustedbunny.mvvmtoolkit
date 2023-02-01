@@ -15,7 +15,7 @@ Main goal of this project - bring MVVM into UI Toolkit
 - [Smart-string binding](#smart-string-binding)
 - [Input binding](#input-binding)
 - [Value Changed binding](#value-changed-binding)
-- [Custom Value Changed Type support](#custom-value-changed-type-support)
+- [Custom Binding Type support](#custom-binding-type-support)
 - [Reflection binding](#reflection-binding)
 - [String format binding](#string-format-binding)
 - [Smart-String nested variables](#smart-string-nested-variables)
@@ -264,7 +264,7 @@ Value Changed binding uses `%` operator.
 Now `Counter` property value will be mirrored
 if you manually type a value into field.
 
-### Custom Value Changed Type support
+### Custom Binding Type support
 
 To avoid usage of slow reflection non-supported types will need have it's own
 `IGenericsSolver` implementation.
