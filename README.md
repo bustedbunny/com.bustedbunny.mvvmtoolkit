@@ -217,7 +217,7 @@ Now our `View` will be automatically updated as we change `TestInt` property val
 ### Input binding
 
 To bind a button to specific method we will need to
-implement a parameterless void method
+implement a void method
 with `[RelayCommand]` attribute or create `ICommand` property ourselves.
 
 Let's create a simple counter:
@@ -243,10 +243,26 @@ In our `.uxml` asset we define `view-data-key` attribute. Each binding needs to 
 <ui:Button text="Counter" view-data-key="{@IncrementCommand}"/>
 ```
 
-We can also bind button's enabled state to boolean property, which will be updated automatically.
+We can also bind button's enabled state to boolean field/property/method,
+which will be updated automatically.
 
 ```csharp
 [RelayCommand(CanExecute = nameof(CanIncrement))]
+```
+
+We can also send bool, int, float or string as parameter.
+
+```xml
+
+<ui:Button view-data-key="{@FooCommand:5}"/>
+```
+
+```csharp
+[RelayCommand]
+private void Foo(int arg) 
+{
+// arg is going to be 5
+}
 ```
 
 ### Value Changed binding
