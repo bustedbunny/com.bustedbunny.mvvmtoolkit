@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 namespace MVVMToolkit.Binding
 {
-    public class ClickParser : BindingParser<ClickBinding>
+    public class ClickParser : BindingParser<CommandBinding>
     {
         public ClickParser(INotifyPropertyChanged viewModel) : base(viewModel) { }
 
@@ -15,16 +15,16 @@ namespace MVVMToolkit.Binding
 
         public override void Process(VisualElement element, string key)
         {
-            boundingMap.Add(new ClickBinding(element, bindingContext, key), key);
+            boundingMap.Add(new CommandBinding(element, bindingContext, key), key);
         }
     }
 
-    public class ClickBinding : IElementBinding
+    public class CommandBinding : IElementBinding
     {
         public IRelayCommand Command { get; }
         public VisualElement Element { get; }
 
-        public ClickBinding(VisualElement element, object boundObject, string key)
+        public CommandBinding(VisualElement element, object boundObject, string key)
         {
             Throw.ThrowNullOrEmpty(key);
             var selectors = key.Split(':');
