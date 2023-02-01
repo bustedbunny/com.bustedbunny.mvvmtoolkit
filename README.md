@@ -22,9 +22,13 @@ Main goal of this project - bring MVVM into UI Toolkit
 
 ## Roadmap
 
-* ~~Tooltip text binding.~~ Tooltips don't work in runtime :(
-* ~~Nested variable support for smart-string~~ Done
+* ~~Tooltip text binding.~~ ~~Tooltips don't work in runtime :(~~
+* Tooltips extension.
+* ~~Nested variable support for smart-string~~ Done.
 * Burst-compatible wrapper for Messenger.
+* Localization Asset Table support.
+* Localization Multi-Table support.
+* Binding type conversion support.
 
 ## How to:
 
