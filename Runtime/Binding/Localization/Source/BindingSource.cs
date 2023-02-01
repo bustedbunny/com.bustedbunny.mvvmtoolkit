@@ -53,8 +53,9 @@ namespace MVVMToolkit.Binding.Localization.Source
                     bindingGroup = group;
                     break;
                 }
+
+                return false;
             }
-            else return false;
 
 
             var symbol = selectorInfo.SelectorOperator;
