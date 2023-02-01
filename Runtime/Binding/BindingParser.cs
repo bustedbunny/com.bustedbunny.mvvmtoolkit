@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using MVVMToolkit.Binding.Localization;
+using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.UIElements;
 
@@ -66,7 +67,17 @@ namespace MVVMToolkit.Binding
                     foreach (var store in stores)
                     {
                         if (binding.StartsWith(store.Symbol()))
-                            store.Process(element, binding[1..]);
+                        {
+                            try
+                            {
+                                store.Process(element, binding[1..]);
+                            }
+                            catch (Exception e)
+                            {
+                                Debug.LogError($"Key that caused error: {binding[1..]}");
+                                Debug.LogException(e);
+                            }
+                        }
                     }
                 }
             });
@@ -83,7 +94,17 @@ namespace MVVMToolkit.Binding
                 foreach (var store in stores)
                 {
                     if (key.StartsWith(store.Symbol()))
-                        store.Process(element, key[1..]);
+                    {
+                        try
+                        {
+                            store.Process(element, key);
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.LogError($"Key that caused error: {key}");
+                            Debug.LogException(e);
+                        }
+                    }
                 }
             });
             PostBindingCallback(stores);
