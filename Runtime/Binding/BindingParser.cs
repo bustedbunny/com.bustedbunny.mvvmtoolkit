@@ -17,9 +17,12 @@ namespace MVVMToolkit.Binding
         private readonly List<IBindingParser> _textStores = new();
         private readonly List<IBindingParser> _tooltipStores = new();
         private readonly List<IBindingParser> _viewDataKeyStores = new();
+        private readonly INotifyPropertyChanged _binding;
 
         public BindingParser(INotifyPropertyChanged model, VisualElement root, LocalizedStringTable[] tables)
         {
+            _binding = model;
+
             _stores.Add(_textStores);
             _stores.Add(_tooltipStores);
             _stores.Add(_viewDataKeyStores);
@@ -75,7 +78,7 @@ namespace MVVMToolkit.Binding
                             }
                             catch (Exception e)
                             {
-                                Debug.LogError($"Key that caused error: {binding[1..]}");
+                                Debug.LogError($"Key that caused error: {binding}. Binding type: {_binding.GetType()}");
                                 Debug.LogException(e);
                             }
                         }
@@ -102,7 +105,8 @@ namespace MVVMToolkit.Binding
                         }
                         catch (Exception e)
                         {
-                            Debug.LogError($"Key that caused error: {key}");
+                            Debug.LogError(
+                                $"Key that caused error: {key}. Binding type: {_binding.GetType()}");
                             Debug.LogException(e);
                         }
                     }
