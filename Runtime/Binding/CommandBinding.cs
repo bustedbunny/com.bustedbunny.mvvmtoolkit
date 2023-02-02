@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 using CommunityToolkit.Mvvm.Input;
-using JetBrains.Annotations;
 using UnityEngine.UIElements;
 
 namespace MVVMToolkit.Binding

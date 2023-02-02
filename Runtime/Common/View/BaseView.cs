@@ -1,4 +1,3 @@
-using System;
 using CommunityToolkit.Mvvm.Messaging;
 using MVVMToolkit.Binding;
 using MVVMToolkit.Messaging;
