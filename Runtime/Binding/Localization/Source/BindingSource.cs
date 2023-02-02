@@ -44,6 +44,11 @@ namespace MVVMToolkit.Binding.Localization.Source
 
         public bool TryEvaluateSelector(ISelectorInfo selectorInfo)
         {
+            var selectorOperator = selectorInfo.SelectorOperator;
+            if (string.IsNullOrEmpty(selectorOperator) || selectorOperator.Length != 1) return false;
+            var symbol = selectorOperator[0];
+            if (symbol is not '>' && symbol is not '#') return false;
+
             var bindingGroup = selectorInfo.CurrentValue as BindingGroup;
             if (bindingGroup is null && selectorInfo.FormatDetails?.OriginalArgs is not null)
             {
@@ -54,21 +59,21 @@ namespace MVVMToolkit.Binding.Localization.Source
                     break;
                 }
 
-                return false;
+                // Fallback if argument is not defined (smth is wrong)
+                selectorInfo.Result = string.Empty;
+                return true;
             }
 
 
-            var symbol = selectorInfo.SelectorOperator;
-            if (string.IsNullOrEmpty(symbol) || symbol.Length != 1) return false;
             // # is used for local variables
-            if (symbol[0] is '>')
+            if (symbol is '>')
             {
                 if (!bindingGroup.BindVariable(selectorInfo.SelectorText, out var variable)) return false;
                 CacheAndSetResult(selectorInfo, variable);
                 return true;
             }
 
-            if (symbol[0] is '#')
+            if (symbol is '#')
             {
                 if (!bindingGroup.BindGroup(selectorInfo.SelectorText, out var group)) return false;
 
