@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.Messaging;
+using MVVMToolkit.DependencyInjection;
 using UnityEngine;
 
 namespace MVVMToolkit

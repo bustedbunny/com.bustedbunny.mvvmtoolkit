@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.Messaging;
+using MVVMToolkit.DependencyInjection;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -47,11 +48,15 @@ namespace MVVMToolkit
 
             foreach (var view in GetComponentsInChildren<BaseView>()) _views.Add(view);
 
+
+            // After all services have been registered we do dependency injection
+            serviceProvider.Inject();
+
             // Now we resolve cross references for views and viewModels
             foreach (var view in _views) view.Attach(messenger, serviceProvider);
             foreach (var viewModel in _viewModels) viewModel.Attach(messenger, serviceProvider);
 
-            
+
             var sortDict = new Dictionary<VisualElement, int>(_views.Count);
 
             foreach (var view in _views)
