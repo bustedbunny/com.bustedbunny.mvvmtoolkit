@@ -27,7 +27,7 @@ Main goal of this project - bring MVVM into UI Toolkit
 * ~~Nested variable support for smart-string~~ Done.
 * Burst-compatible wrapper for Messenger.
 * Localization Asset Table support.
-* Localization Multi-Table support.
+* ~~Localization Multi-Table support.~~ Done.
 * Binding type conversion support.
 
 ## How to:

@@ -7,21 +7,21 @@ namespace MVVMToolkit.Binding.Localization
 {
     public class LocalizationParser : BindingParser<LocalizedTextBinding>
     {
-        private readonly LocalizedStringTable _stringTable;
+        private readonly LocalizedStringTable[] _stringTables;
         private readonly Action<VisualElement, string> _bindingOperation;
         public override char Symbol() => '#';
 
-        public LocalizationParser(INotifyPropertyChanged viewModel, LocalizedStringTable stringTable,
+        public LocalizationParser(INotifyPropertyChanged viewModel, LocalizedStringTable[] stringTables,
             Action<VisualElement, string> bindingOperation) : base(viewModel)
         {
-            _stringTable = stringTable;
+            _stringTables = stringTables;
             _bindingOperation = bindingOperation;
         }
 
         public override void Process(VisualElement element, string key)
         {
             var text = (TextElement)element;
-            var binding = new LocalizedTextBinding(text, bindingContext, key, _stringTable, _bindingOperation);
+            var binding = new LocalizedTextBinding(text, bindingContext, key, _stringTables, _bindingOperation);
             boundingMap.Add(binding, key);
         }
     }

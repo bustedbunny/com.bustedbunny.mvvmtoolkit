@@ -18,7 +18,7 @@ namespace MVVMToolkit.Binding
         private readonly List<IBindingParser> _tooltipStores = new();
         private readonly List<IBindingParser> _viewDataKeyStores = new();
 
-        public BindingParser(INotifyPropertyChanged model, VisualElement root, LocalizedStringTable table)
+        public BindingParser(INotifyPropertyChanged model, VisualElement root, LocalizedStringTable[] tables)
         {
             _stores.Add(_textStores);
             _stores.Add(_tooltipStores);
@@ -26,10 +26,11 @@ namespace MVVMToolkit.Binding
 
             _rootVisualElement = root;
 
-            if (table is not null && !table.IsEmpty)
+            if (tables.Length > 0)
             {
-                _textStores.Add(new LocalizationParser(model, table,
+                _textStores.Add(new LocalizationParser(model, tables,
                     static (element, s) => ((TextElement)element).text = s));
+
                 // _tooltipStores.Add(new LocalizationParser(model, table,
                 //     static (element, s) => element.tooltip = s));
             }

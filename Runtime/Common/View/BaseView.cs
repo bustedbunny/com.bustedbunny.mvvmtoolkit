@@ -4,6 +4,7 @@ using MVVMToolkit.Binding;
 using MVVMToolkit.Messaging;
 using UnityEngine;
 using UnityEngine.Localization;
+using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -12,8 +13,10 @@ namespace MVVMToolkit
 {
     public class BaseView : UIObject, IRecipient<CloseViewsMessage>
     {
-        [SerializeField] private LocalizedStringTable localizationTable;
-        protected LocalizedStringTable LocalizedTable => localizationTable;
+        [FormerlySerializedAs("localizationTable")] [SerializeField]
+        private LocalizedStringTable[] localizationTables;
+
+        protected LocalizedStringTable[] LocalizedTables => localizationTables;
         [SerializeField] private VisualTreeAsset asset;
         protected VisualTreeAsset Asset => asset;
         [SerializeField] private int sortLayer;
@@ -37,7 +40,7 @@ namespace MVVMToolkit
         }
 
         protected virtual BindingParser ResolveBinding() =>
-            new BindingParser(BindingContext, RootVisualElement, LocalizedTable);
+            new BindingParser(BindingContext, RootVisualElement, LocalizedTables);
 
         public void Initialize()
         {
