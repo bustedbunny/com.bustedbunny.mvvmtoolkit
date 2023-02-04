@@ -2754,6 +2754,7 @@
             <summary>
             Extensions for the <see cref="T:CommunityToolkit.Mvvm.Messaging.IMessenger"/> type.
             </summary>
+            <inheritdoc/>
         </member>
         <member name="T:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.MethodInfos">
             <summary>
@@ -2945,6 +2946,135 @@
             just like <see cref="M:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Send``1(CommunityToolkit.Mvvm.Messaging.IMessenger)"/>, and then send it to the right recipients.
             </remarks>
             <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="messenger"/> or <paramref name="token"/> are <see langword="null"/>.</exception>
+        </member>
+        <member name="M:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.CreateObservable``1(CommunityToolkit.Mvvm.Messaging.IMessenger)">
+            <summary>
+            Creates an <see cref="T:System.IObservable`1"/> instance that can be used to be notified whenever a message of a given type is broadcast by a messenger.
+            </summary>
+            <typeparam name="TMessage">The type of message to use to receive notification for through the resulting <see cref="T:System.IObservable`1"/> instance.</typeparam>
+            <param name="messenger">The <see cref="T:CommunityToolkit.Mvvm.Messaging.IMessenger"/> instance to use to register the recipient.</param>
+            <returns>An <see cref="T:System.IObservable`1"/> instance to receive notifications for <typeparamref name="TMessage"/> messages being broadcast.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="messenger"/> is <see langword="null"/>.</exception>
+        </member>
+        <member name="M:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.CreateObservable``2(CommunityToolkit.Mvvm.Messaging.IMessenger,``1)">
+            <summary>
+            Creates an <see cref="T:System.IObservable`1"/> instance that can be used to be notified whenever a message of a given type is broadcast by a messenger.
+            </summary>
+            <typeparam name="TMessage">The type of message to use to receive notification for through the resulting <see cref="T:System.IObservable`1"/> instance.</typeparam>
+            <typeparam name="TToken">The type of token to identify what channel to use to receive messages.</typeparam>
+            <param name="messenger">The <see cref="T:CommunityToolkit.Mvvm.Messaging.IMessenger"/> instance to use to register the recipient.</param>
+            <param name="token">A token used to determine the receiving channel to use.</param>
+            <returns>An <see cref="T:System.IObservable`1"/> instance to receive notifications for <typeparamref name="TMessage"/> messages being broadcast.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="messenger"/> or <paramref name="token"/> are <see langword="null"/>.</exception>
+        </member>
+        <member name="T:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`1">
+            <summary>
+            An <see cref="T:System.IObservable`1"/> implementations for a given message type.
+            </summary>
+            <typeparam name="TMessage">The type of messages to listen to.</typeparam>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`1.messenger">
+            <summary>
+            The <see cref="T:CommunityToolkit.Mvvm.Messaging.IMessenger"/> instance to use to register the recipient.
+            </summary>
+        </member>
+        <member name="M:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`1.#ctor(CommunityToolkit.Mvvm.Messaging.IMessenger)">
+            <summary>
+            Creates a new <see cref="T:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`1"/> instance with the given parameters.
+            </summary>
+            <param name="messenger">The <see cref="T:CommunityToolkit.Mvvm.Messaging.IMessenger"/> instance to use to register the recipient.</param>
+        </member>
+        <member name="M:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`1.Subscribe(System.IObserver{`0})">
+            <inheritdoc/>
+        </member>
+        <member name="T:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`1.Recipient">
+            <summary>
+            An <see cref="T:CommunityToolkit.Mvvm.Messaging.IRecipient`1"/> implementation for <see cref="T:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`1"/>.
+            </summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`1.Recipient.messenger">
+            <summary>
+            The <see cref="T:CommunityToolkit.Mvvm.Messaging.IMessenger"/> instance to use to register the recipient.
+            </summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`1.Recipient.observer">
+            <summary>
+            The target <see cref="T:System.IObserver`1"/> instance currently in use.
+            </summary>
+        </member>
+        <member name="M:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`1.Recipient.#ctor(CommunityToolkit.Mvvm.Messaging.IMessenger,System.IObserver{`0})">
+            <summary>
+            Creates a new <see cref="T:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`1.Recipient"/> instance with the specified parameters.
+            </summary>
+            <param name="messenger">The <see cref="T:CommunityToolkit.Mvvm.Messaging.IMessenger"/> instance to use to register the recipient.</param>
+            <param name="observer">The <see cref="T:System.IObserver`1"/> instance to use to create the recipient for.</param>
+        </member>
+        <member name="M:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`1.Recipient.Receive(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`1.Recipient.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="T:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`2">
+            <summary>
+            An <see cref="T:System.IObservable`1"/> implementations for a given pair of message and token types.
+            </summary>
+            <typeparam name="TMessage">The type of messages to listen to.</typeparam>
+            <typeparam name="TToken">The type of token to identify what channel to use to receive messages.</typeparam>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`2.messenger">
+            <summary>
+            The <see cref="T:CommunityToolkit.Mvvm.Messaging.IMessenger"/> instance to use to register the recipient.
+            </summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`2.token">
+            <summary>
+            The token used to determine the receiving channel to use.
+            </summary>
+        </member>
+        <member name="M:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`2.#ctor(CommunityToolkit.Mvvm.Messaging.IMessenger,`1)">
+            <summary>
+            Creates a new <see cref="T:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`2"/> instance with the given parameters.
+            </summary>
+            <param name="messenger">The <see cref="T:CommunityToolkit.Mvvm.Messaging.IMessenger"/> instance to use to register the recipient.</param>
+            <param name="token">A token used to determine the receiving channel to use.</param>
+        </member>
+        <member name="M:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`2.Subscribe(System.IObserver{`0})">
+            <inheritdoc/>
+        </member>
+        <member name="T:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`2.Recipient">
+            <summary>
+            An <see cref="T:CommunityToolkit.Mvvm.Messaging.IRecipient`1"/> implementation for <see cref="T:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`2"/>.
+            </summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`2.Recipient.messenger">
+            <summary>
+            The <see cref="T:CommunityToolkit.Mvvm.Messaging.IMessenger"/> instance to use to register the recipient.
+            </summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`2.Recipient.observer">
+            <summary>
+            The target <see cref="T:System.IObserver`1"/> instance currently in use.
+            </summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`2.Recipient.token">
+            <summary>
+            The token used to determine the receiving channel to use.
+            </summary>
+        </member>
+        <member name="M:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`2.Recipient.#ctor(CommunityToolkit.Mvvm.Messaging.IMessenger,System.IObserver{`0},`1)">
+            <summary>
+            Creates a new <see cref="T:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`2.Recipient"/> instance with the specified parameters.
+            </summary>
+            <param name="messenger">The <see cref="T:CommunityToolkit.Mvvm.Messaging.IMessenger"/> instance to use to register the recipient.</param>
+            <param name="observer">The <see cref="T:System.IObserver`1"/> instance to use to create the recipient for.</param>
+            <param name="token">A token used to determine the receiving channel to use.</param>
+        </member>
+        <member name="M:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`2.Recipient.Receive(`0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:CommunityToolkit.Mvvm.Messaging.IMessengerExtensions.Observable`2.Recipient.Dispose">
+            <inheritdoc/>
         </member>
         <member name="T:CommunityToolkit.Mvvm.Messaging.Internals.ArrayPoolBufferWriter`1">
             <summary>
@@ -3376,6 +3506,13 @@
             This <see cref="T:CommunityToolkit.Mvvm.Messaging.IMessenger"/> implementation uses strong references to track the registered
             recipients, so it is necessary to manually unregister them when they're no longer needed.
             </remarks>
+        </member>
+        <member name="M:CommunityToolkit.Mvvm.Messaging.StrongReferenceMessenger.SendTyped(System.Object,System.Type)">
+            <summary>
+            Send message of specified type
+            </summary>
+            <param name="message">Message object to send</param>
+            <param name="type">Type of Message object</param>
         </member>
         <member name="F:CommunityToolkit.Mvvm.Messaging.StrongReferenceMessenger.recipientsMap">
             <summary>
@@ -4122,7 +4259,6 @@
             <summary>
             An attribute that allows parameters to receive the expression of other parameters.
             </summary>
-            <remarks>Internal copy from the BCL attribute.</remarks>
         </member>
         <member name="M:System.Runtime.CompilerServices.CallerArgumentExpressionAttribute.#ctor(System.String)">
             <summary>
@@ -4135,23 +4271,21 @@
             Gets the parameter name the expression is retrieved from.
             </summary>
         </member>
-        <member name="T:System.Runtime.CompilerServices.SkipLocalsInitAttribute">
-            <summary>
-            Used to indicate to the compiler that the <c>.locals init</c> flag should not be set in method headers.
-            </summary>
-            <remarks>Internal copy from the BCL attribute.</remarks>
-        </member>
         <member name="T:System.Runtime.CompilerServices.IsExternalInit">
             <summary>
             Reserved to be used by the compiler for tracking metadata.
             This class should not be used by developers in source code.
             </summary>
         </member>
+        <member name="T:System.Runtime.CompilerServices.SkipLocalsInitAttribute">
+            <summary>
+            Used to indicate to the compiler that the <c>.locals init</c> flag should not be set in method headers.
+            </summary>
+        </member>
         <member name="T:System.Diagnostics.CodeAnalysis.MemberNotNullAttribute">
             <summary>
             Specifies that the method or property will ensure that the listed field and property members have not-null values.
             </summary>
-            <remarks>Internal copy from the BCL attribute.</remarks>
         </member>
         <member name="M:System.Diagnostics.CodeAnalysis.MemberNotNullAttribute.#ctor(System.String)">
             <summary>
@@ -4172,14 +4306,22 @@
         </member>
         <member name="T:System.Diagnostics.CodeAnalysis.RequiresUnreferencedCodeAttribute">
             <summary>
-            Indicates that the specified method requires dynamic access to code that is not referenced statically.
+            Indicates that the specified method requires dynamic access to code that is not referenced
+            statically, for example through <see cref="N:System.Reflection"/>.
             </summary>
+            <remarks>
+            This allows tools to understand which methods are unsafe to call when removing unreferenced
+            code from an application.
+            </remarks>
         </member>
         <member name="M:System.Diagnostics.CodeAnalysis.RequiresUnreferencedCodeAttribute.#ctor(System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:System.Diagnostics.CodeAnalysis.RequiresUnreferencedCodeAttribute"/> class.
+            Initializes a new instance of the <see cref="T:System.Diagnostics.CodeAnalysis.RequiresUnreferencedCodeAttribute"/> class
+            with the specified message.
             </summary>
-            <param name="message">A message that contains information about the usage of unreferenced code.</param>
+            <param name="message">
+            A message that contains information about the usage of unreferenced code.
+            </param>
         </member>
         <member name="P:System.Diagnostics.CodeAnalysis.RequiresUnreferencedCodeAttribute.Message">
             <summary>

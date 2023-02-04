@@ -1,5 +1,5 @@
-using System.Reflection;
-using Unity.Collections.LowLevel.Unsafe;
+using System;
+using UnityEngine.Scripting;
 
 namespace MVVMToolkit.Messaging
 {
@@ -7,13 +7,15 @@ namespace MVVMToolkit.Messaging
 
     public class Wrapped<T> where T : unmanaged, IUnmanagedMessage
     {
-        internal unsafe Wrapped(Pointer boxedPtr)
+        private unsafe Wrapped(byte* ptr) => data = *(T*)ptr;
+
+        private static unsafe Wrapped<T> Init(IntPtr ptr)
         {
-            var ptr = (byte*)Pointer.Unbox(boxedPtr);
-            data = *(T*)ptr;
+            return new((byte*)ptr);
         }
 
-        // internal unsafe byte* DataPtr() => (byte*)UnsafeUtility.AddressOf(ref data);
+        [Preserve]
+        internal static Func<IntPtr, object> GetDelegate() => Init;
 
         public T data;
     }

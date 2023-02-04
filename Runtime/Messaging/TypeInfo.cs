@@ -1,11 +1,10 @@
 using System;
-using System.Reflection;
 
 namespace MVVMToolkit.Messaging
 {
     public class TypeInfo
     {
-        public TypeInfo(int size, Type wrapperType, Type dataType, ConstructorInfo constructor)
+        public TypeInfo(int size, Type wrapperType, Type dataType, Func<IntPtr, object> constructor)
         {
             this.size = size;
             this.wrapperType = wrapperType;
@@ -16,6 +15,6 @@ namespace MVVMToolkit.Messaging
         public readonly int size;
         public readonly Type wrapperType;
         public readonly Type dataType;
-        public readonly ConstructorInfo constructor;
+        public readonly Func<IntPtr, object> constructor;
     }
 }

@@ -19,9 +19,7 @@ namespace MVVMToolkit.Messaging
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
         private static void Init() => Initialize();
 
-        private static readonly Type[] Args = { typeof(Pointer) };
-
-        internal static void Initialize()
+        private static void Initialize()
         {
             if (_initialized) return;
             _initialized = true;
@@ -45,9 +43,18 @@ namespace MVVMToolkit.Messaging
                     var size = Marshal.SizeOf(type);
                     var wrapperType = typeof(Wrapped<>).MakeGenericType(type);
 
-                    const BindingFlags flags = BindingFlags.Instance | BindingFlags.NonPublic;
-                    var constructor = wrapperType.GetConstructor(flags, null, Args, null);
+                    const BindingFlags flags = BindingFlags.Static | BindingFlags.NonPublic;
 
+                    var method = wrapperType.GetMethod("GetDelegate", flags);
+
+                    if (method is null)
+                    {
+                        Debug.LogError($"Type {wrapperType.Name} does not contain GetDelegate method.");
+                        continue;
+                    }
+
+
+                    var constructor = (Func<IntPtr, object>)method.Invoke(null, null);
 
                     var typeInfo = new TypeInfo(size, wrapperType, type, constructor);
 

@@ -1,8 +1,8 @@
-using System;
 using CommunityToolkit.Mvvm.Messaging;
 using MVVMToolkit.Messaging;
 using NUnit.Framework;
-using Unity.Collections;
+
+// ReSharper disable NotAccessedField.Local
 
 namespace MVVMToolkit.RuntimeTests
 {
@@ -18,48 +18,117 @@ namespace MVVMToolkit.RuntimeTests
         {
             var messenger = new StrongReferenceMessenger();
             var recipient = new object();
-            using var wrapper = new UnmanagedWrapperReference();
+            using var wrapper = new WrapperReference(messenger);
+
+            object result = null;
 
             void Receive(object _, Wrapped<TestInt> message)
             {
-                if (message.data.value != 62) throw new("Value differs");
+                result = message.data;
             }
 
             messenger.Register<Wrapped<TestInt>>(recipient, Receive);
 
-            wrapper.Wrapper.Send(new TestInt { value = 62 });
+            var value = new TestInt { value = 62 };
 
-            wrapper.Wrapper.Unwrap(messenger);
+            wrapper.Wrapper.Send(value);
+
+            wrapper.Unwrap();
+
+            Assert.AreEqual(value, result);
+        }
+
+        [Test]
+        public static void ReuseWrapperTest()
+        {
+            var messenger = new StrongReferenceMessenger();
+            var recipient = new object();
+            using var wrapper = new WrapperReference(messenger);
+
+            object result = null;
+
+            void Receive(object _, Wrapped<TestInt> message)
+            {
+                result = message.data;
+            }
+
+            messenger.Register<Wrapped<TestInt>>(recipient, Receive);
+
+
+            var original = new TestInt { value = 62 };
+            wrapper.Wrapper.Send(original);
+            wrapper.Unwrap();
+            Assert.AreEqual(original, result);
+
+            original = new() { value = -123 };
+            wrapper.Wrapper.Send(original);
+            wrapper.Unwrap();
+            Assert.AreEqual(original, result);
+        }
+
+        private struct TestFloat : IUnmanagedMessage
+        {
+            public float value;
+        }
+
+        private struct TestByte : IUnmanagedMessage
+        {
+            public byte value;
+        }
+
+        private struct TestMultiple : IUnmanagedMessage
+        {
+            public float floatValue;
+            public long longValue;
+            public double doubleValue;
+            public byte byteValue;
         }
 
         [Test]
         public static void MultipleMessageTest()
         {
             var messenger = new StrongReferenceMessenger();
+            using var wrapper = new WrapperReference(messenger);
             var recipient1 = new object();
             var recipient2 = new object();
-            using var wrapper = new UnmanagedWrapperReference();
+            var recipient3 = new object();
+            var recipient4 = new object();
+
+            var results = new object[4];
 
             void Receive1(object _, Wrapped<TestInt> message)
             {
-                if (message.data.value != 62) throw new("Value differs");
-            }
-
-            void Receive2(object _, Wrapped<TestInt> message)
-            {
-                if (message.data.value != -123) throw new("Value differs");
+                results[0] = message.data;
             }
 
             messenger.Register<Wrapped<TestInt>>(recipient1, Receive1);
+            messenger.Register<Wrapped<TestFloat>>(recipient2,
+                (_, message) => { results[1] = message.data; });
+            messenger.Register<Wrapped<TestByte>>(recipient3,
+                (_, message) => { results[2] = message.data; });
+            messenger.Register<Wrapped<TestMultiple>>(recipient4,
+                (_, message) => { results[3] = message.data; });
 
-            wrapper.Wrapper.Send(new TestInt { value = 62 });
-            wrapper.Wrapper.Unwrap(messenger);
+            var value1 = new TestInt { value = 500 };
+            var value2 = new TestFloat { value = 123f };
+            var value3 = new TestByte { value = 113 };
+            var value4 = new TestMultiple
+            {
+                floatValue = 1f,
+                longValue = long.MaxValue,
+                doubleValue = double.MinValue,
+                byteValue = 100
+            };
 
-            messenger.UnregisterAll(recipient1);
-            messenger.Register<Wrapped<TestInt>>(recipient2, Receive2);
 
-            wrapper.Wrapper.Send(new TestInt { value = -123 });
-            wrapper.Wrapper.Unwrap(messenger);
+            wrapper.Wrapper.Send(value1);
+            wrapper.Wrapper.Send(value2);
+            wrapper.Wrapper.Send(value3);
+            wrapper.Wrapper.Send(value4);
+
+            wrapper.Unwrap();
+
+            CollectionAssert.AreEquivalent(new object[] { value1, value2, value3, value4 }, results);
         }
     }
 }
