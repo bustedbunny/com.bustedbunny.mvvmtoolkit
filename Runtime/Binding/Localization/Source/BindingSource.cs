@@ -59,9 +59,7 @@ namespace MVVMToolkit.Binding.Localization.Source
                     break;
                 }
 
-                // Fallback if argument is not defined (smth is wrong)
-                selectorInfo.Result = string.Empty;
-                return true;
+                return false;
             }
 
 
