@@ -61,7 +61,6 @@ namespace MVVMToolkit.Binding.Localization
 
                 if (table.TableReference.SharedTableData.Contains(key))
                 {
-                    table.TableChanged += TableChanged;
                     return table.TableReference;
                 }
             }
@@ -69,16 +68,7 @@ namespace MVVMToolkit.Binding.Localization
             throw new BindingException($"No key: {key} found in provided tables.");
         }
 
-        private void TableChanged(StringTable value)
-        {
-            Debug.Log("TableChanged");
-        }
-
-        private void StringChanged(string value)
-        {
-            Debug.Log("stringChanged");
-            _operation(_element, value);
-        }
+        private void StringChanged(string value) => _operation(_element, value);
 
 
         public void Dispose()
