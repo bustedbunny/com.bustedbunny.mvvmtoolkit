@@ -6,7 +6,7 @@ using UnityEngine.Localization.SmartFormat.PersistentVariables;
 
 namespace MVVMToolkit.Binding.Localization.Source
 {
-    public class BindingGroup : IVariableGroup, IVariable, IDisposable
+    public class BindingGroup : IVariable, IDisposable
     {
         public BindingGroup(INotifyPropertyChanged binding)
         {
@@ -17,7 +17,7 @@ namespace MVVMToolkit.Binding.Localization.Source
 
         public void ClearBindings()
         {
-            foreach (var (key, variable) in variableLookup)
+            foreach (var (_, variable) in variableLookup)
             {
                 if (variable is BindingGroupVariable group)
                 {
@@ -41,19 +41,6 @@ namespace MVVMToolkit.Binding.Localization.Source
         private void UpdateVariable(object sender, PropertyChangedEventArgs e)
         {
             if (variableLookup.TryGetValue(e.PropertyName, out var variable)) variable.Set();
-        }
-
-
-        public bool TryGetValue(string key, out IVariable value)
-        {
-            if (variableLookup.TryGetValue(key, out var result))
-            {
-                value = result;
-                return true;
-            }
-
-            value = default;
-            return false;
         }
 
         public bool BindGroup(string key, out BindingGroupVariable group)
