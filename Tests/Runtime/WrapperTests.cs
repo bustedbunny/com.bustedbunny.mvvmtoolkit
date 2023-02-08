@@ -26,11 +26,9 @@ namespace MVVMToolkit.RuntimeTests
             {
                 result = message.data;
             }
-
             messenger.Register<Wrapped<TestInt>>(recipient, Receive);
 
             var value = new TestInt { value = 62 };
-
             wrapper.Wrapper.Send(value);
 
             wrapper.Unwrap();

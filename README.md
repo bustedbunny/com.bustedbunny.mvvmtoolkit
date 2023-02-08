@@ -19,13 +19,15 @@ Main goal of this project - bring MVVM into UI Toolkit
 - [Reflection binding](#reflection-binding)
 - [String format binding](#string-format-binding)
 - [Smart-String nested variables](#smart-string-nested-variables)
+- [Nested Localized String binding](#nested-localized-string-binding)
+- [Burst Messenger support](#burst-messenger-support)
 
 ## Roadmap
 
 * ~~Tooltip text binding.~~ ~~Tooltips don't work in runtime :(~~
 * Tooltips extension.
 * ~~Nested variable support for smart-string~~ Done.
-* Burst-compatible wrapper for Messenger.
+* ~~Burst-compatible wrapper for Messenger.~~ Done.
 * Localization Asset Table support.
 * ~~Localization Multi-Table support.~~ Done.
 * Binding type conversion support.
@@ -349,3 +351,57 @@ To define a group we need to use `#` operator and `>` operator for a variable.
 With full support we can go fully nuts:
 
 ![image](https://user-images.githubusercontent.com/30902981/215578542-9e86061c-3947-44e8-82de-7026b0bf98a2.png)
+
+### Nested Localized String binding
+
+In order to nest LocalizedString inside another one use '@' operator.
+
+![image](https://user-images.githubusercontent.com/30902981/217531299-b111ece9-4a49-4559-a0a5-8b9e11389841.png)
+
+### Burst Messenger support
+
+In case you want Burst code to send messages with data first declare
+a type inheriting from `IUnmanagedMessage`.
+
+```csharp
+private struct TestInt : IUnmanagedMessage
+{
+    public int value;
+}
+```
+
+Now we need to create `WrapperReference` using
+our `Messenger` instance as argument.
+
+```csharp
+var messenger = new StrongReferenceMessenger();
+var wrapper = new WrapperReference(messenger);
+```
+
+After that we can pass struct obtained from `wrapper.Wrapper` to our
+unmanaged code and call `Send` method on it. For example:
+
+```csharp
+var value = new TestInt { value = 62 };
+Wrapper.Send(value);
+```
+
+Once our unmanaged code is finished, messages need to be unwrapped:
+
+```csharp
+wrapper.Unwrap();
+```
+
+This method will send messages of type `Wrapper<TestInt>` to all subscribed
+recipients.
+
+`IRecipient<T>` interfacing is not supported.
+Subscription is only supported manually. For example:
+
+```csharp
+void Receive(object _, Wrapped<TestInt> message)
+{
+    result = message.data;
+}
+messenger.Register<Wrapped<TestInt>>(recipient, Receive);
+```
