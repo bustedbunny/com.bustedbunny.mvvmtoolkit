@@ -53,8 +53,9 @@ namespace MVVMToolkit.Binding.Localization.Source
             if (symbol is not '>' && symbol is not '#' && symbol is not '@') return false;
 
             var bindingGroup = selectorInfo.CurrentValue as BindingGroup;
-            if (bindingGroup is null && selectorInfo.FormatDetails?.OriginalArgs is not null)
+            if (bindingGroup is null)
             {
+                if (selectorInfo.FormatDetails?.OriginalArgs is null) return false;
                 foreach (var arg in selectorInfo.FormatDetails.OriginalArgs)
                 {
                     if (arg is not BindingGroup group) continue;
