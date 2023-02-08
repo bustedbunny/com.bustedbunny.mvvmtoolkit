@@ -35,7 +35,7 @@ Main goal of this project - bring MVVM into UI Toolkit
 ### General requirements
 
 * UniTask
-* '#' and '>' symbols are reserved in Localization package operators
+* '#', '>' and '@' symbols are reserved in Localization package operators
 
 ### Make a basic view
 

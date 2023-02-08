@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.SmartFormat.Core.Extensions;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;
@@ -18,7 +19,7 @@ namespace MVVMToolkit.Binding.Localization.Source
                 extensions.Insert(0, new BindingSource());
             }
 
-            LocalizationSettings.StringDatabase.SmartFormatter.Parser.AddOperators("#>");
+            LocalizationSettings.StringDatabase.SmartFormatter.Parser.AddOperators("#>@");
         }
 
         #if UNITY_EDITOR
@@ -47,7 +48,7 @@ namespace MVVMToolkit.Binding.Localization.Source
             var selectorOperator = selectorInfo.SelectorOperator;
             if (string.IsNullOrEmpty(selectorOperator) || selectorOperator.Length != 1) return false;
             var symbol = selectorOperator[0];
-            if (symbol is not '>' && symbol is not '#') return false;
+            if (symbol is not '>' && symbol is not '#' && symbol is not '@') return false;
 
             var bindingGroup = selectorInfo.CurrentValue as BindingGroup;
             if (bindingGroup is null && selectorInfo.FormatDetails?.OriginalArgs is not null)
@@ -77,6 +78,21 @@ namespace MVVMToolkit.Binding.Localization.Source
 
                 CacheAndSetResult(selectorInfo, group);
                 return true;
+            }
+
+            if (symbol is '@')
+            {
+                if (selectorInfo?.FormatDetails?.FormatCache?.LocalVariables is LocalizedString ls)
+                {
+                    var nested = new LocalizedString(ls.TableReference, selectorInfo.SelectorText);
+                    var asyncOperation = nested.GetLocalizedStringAsync(selectorInfo.FormatDetails.OriginalArgs);
+                    if (!asyncOperation.IsDone) throw new BindingException("Nested string is not loaded.");
+
+                    selectorInfo.Result = asyncOperation.Result;
+                    return true;
+                }
+
+                return false;
             }
 
             return false;
