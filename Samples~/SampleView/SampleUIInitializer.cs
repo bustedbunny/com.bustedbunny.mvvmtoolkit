@@ -5,7 +5,7 @@ using UnityEngine;
 // This is just an example of how you can initialize your UI
 // This can be done in infinite other ways and depends only on your application
 [RequireComponent(typeof(UIRoot))]
-public class UIInitializer : MonoBehaviour
+public class SampleUIInitializer : MonoBehaviour
 {
     // Internally UI is initialized in Awake
     // Actual initialization should be done at least after Start 
