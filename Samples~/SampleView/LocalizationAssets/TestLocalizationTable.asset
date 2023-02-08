@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5be51871efa6c3e4eae1703925c8f5ac, type: 3}
   m_Name: TestLocalizationTable
   m_EditorClassIdentifier: 
-  m_SharedTableData: {fileID: 11400000, guid: 7b8cfd31915654e46a34ed12caab5bc2, type: 2}
+  m_SharedTableData: {fileID: 11400000, guid: 7ee396bd6bb540068593155f6ff4a63c, type: 2}
   m_Tables:
-  - {fileID: 11400000, guid: 102cb657d029be542a6abfc182f79c51, type: 2}
+  - {fileID: 11400000, guid: 5d4a3d884761467a8876e185af000b81, type: 2}
   m_Extensions: []
   m_Group: String Table
   references:
