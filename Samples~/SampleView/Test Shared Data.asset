@@ -31,6 +31,10 @@ MonoBehaviour:
     m_Key: AdvancedNestedTest
     m_Metadata:
       m_Items: []
+  - m_Id: 4974541992505344
+    m_Key: NestedLocalizedString
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -168,8 +168,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e46919e4c0754594b67f2f20bf5abbc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localizationTable:
-    m_TableReference:
+  localizationTables:
+  - m_TableReference:
       m_TableCollectionName: GUID:7b8cfd31915654e46a34ed12caab5bc2
   asset: {fileID: 9197481963319205126, guid: 158b356721c1df34e872590082b3c91a, type: 3}
   sortLayer: 0

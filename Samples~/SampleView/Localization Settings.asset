@@ -64,7 +64,7 @@ MonoBehaviour:
         m_CustomTableProvider:
           rid: -2
         m_CustomTablePostprocessor:
-          rid: 6133111736408997950
+          rid: 6133111759496019969
         m_UseFallback: 0
         m_MissingTranslationState: 1
         m_NoTranslationFoundMessage: No translation found for '{key}' in {table.TableCollectionName}
@@ -111,7 +111,7 @@ MonoBehaviour:
           rid: 6133111623286784007
         m_AlphanumericSelectors: 1
         m_AllowedSelectorChars: _-
-        m_Operators: '[]().,'
+        m_Operators: '[]().,#>'
         m_AlternativeEscaping: 0
         m_AlternativeEscapeChar: 92
     - rid: 6133111623286784009
@@ -196,5 +196,5 @@ MonoBehaviour:
         - default
         - d
         - 
-    - rid: 6133111736408997950
+    - rid: 6133111759496019969
       type: {class: TablePostprocessor, ns: MVVMToolkit.Binding.Localization, asm: com.bustedbunny.mvvmtoolkit}

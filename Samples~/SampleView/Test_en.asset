@@ -34,8 +34,13 @@ MonoBehaviour:
       m_Items:
       - rid: 6133111651638444037
   - m_Id: 463677906104320
-    m_Localized: 'Nested float = {#Group:{>NestedFloat} Deep bool = {#Deep:{>NestedBool}
-      Deep float = {>NestedFloat}} } '
+    m_Localized: Nested float = {#Group:{>NestedFloat} Deep bool = {#Deep:{>NestedBool}
+      Deep float = {>NestedFloat}} }
+    m_Metadata:
+      m_Items:
+      - rid: 6133111651638444037
+  - m_Id: 4974541992505344
+    m_Localized: 'This is a nested localized string: {@AdvancedNestedTest}'
     m_Metadata:
       m_Items:
       - rid: 6133111651638444037
@@ -45,4 +50,4 @@ MonoBehaviour:
     - rid: 6133111651638444037
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 0030a2e1299c01000030e27d769e01000030e26cb6a50100003062c669fb0300
+        m_Entries: 0030a2e1299c01000030e27d769e01000030e26cb6a50100003062c669fb0300003062d051ac1100

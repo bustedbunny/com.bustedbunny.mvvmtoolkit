@@ -3,7 +3,7 @@
          noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
          schemaLocation="UnityEngine.UIElements file:/F:/UnityProjects/Packages/ECSMVVMToolkit/UIElementsSchema/UnityEngine.UIElements.xsd"
          editor-extension-mode="False">
-    <ui:VisualElement style="flex-grow: 1; font-size: 70px;">
+    <ui:VisualElement style="flex-grow: 1; font-size: 42px;">
         <ui:Label text="#Text"/>
         <ui:Label text="#VariableTest"/>
 
@@ -17,5 +17,7 @@
 
         <ui:Label text="#NestedTest"/>
         <ui:Label text="#AdvancedNestedTest"/>
+
+        <ui:Label text="#NestedLocalizedString" style="white-space: normal;"/>
     </ui:VisualElement>
 </ui:UXML>
