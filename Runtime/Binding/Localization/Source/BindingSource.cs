@@ -1,9 +1,11 @@
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.SmartFormat.Core.Extensions;
+using UnityEngine.Localization.SmartFormat.Core.Formatting;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;
 
 namespace MVVMToolkit.Binding.Localization.Source
@@ -82,17 +84,12 @@ namespace MVVMToolkit.Binding.Localization.Source
 
             if (symbol is '@')
             {
-                if (selectorInfo?.FormatDetails?.FormatCache?.LocalVariables is LocalizedString ls)
-                {
-                    var nested = new LocalizedString(ls.TableReference, selectorInfo.SelectorText);
-                    var asyncOperation = nested.GetLocalizedStringAsync(selectorInfo.FormatDetails.OriginalArgs);
-                    if (!asyncOperation.IsDone) throw new BindingException("Nested string is not loaded.");
+                var nested = new LocalizedString(bindingGroup.Parent.TableReference, selectorInfo.SelectorText);
+                var asyncOperation = nested.GetLocalizedStringAsync(selectorInfo.FormatDetails.OriginalArgs);
+                if (!asyncOperation.IsDone) throw new BindingException("Nested string is not loaded.");
 
-                    selectorInfo.Result = asyncOperation.Result;
-                    return true;
-                }
-
-                return false;
+                selectorInfo.Result = asyncOperation.Result;
+                return true;
             }
 
             return false;

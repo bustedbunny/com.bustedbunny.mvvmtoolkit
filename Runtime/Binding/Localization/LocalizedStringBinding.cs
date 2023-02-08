@@ -14,7 +14,7 @@ namespace MVVMToolkit.Binding.Localization
         public LocalizedStringBinding(LocalizedString ls, INotifyPropertyChanged binding)
         {
             _ls = ls;
-            _rootBinding = new(binding);
+            _rootBinding = new(binding, ls);
 
             _ls.Arguments ??= new List<object>();
             if (!_ls.Arguments.Contains(_rootBinding))

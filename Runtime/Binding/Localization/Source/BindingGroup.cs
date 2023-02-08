@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using UnityEngine.Localization;
 using UnityEngine.Localization.SmartFormat.Core.Extensions;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;
 
@@ -8,8 +9,11 @@ namespace MVVMToolkit.Binding.Localization.Source
 {
     public class BindingGroup : IVariable, IDisposable
     {
-        public BindingGroup(INotifyPropertyChanged binding)
+        public LocalizedString Parent { get; }
+
+        public BindingGroup(INotifyPropertyChanged binding, LocalizedString parent)
         {
+            Parent = parent;
             this.binding = binding;
 
             binding.PropertyChanged += UpdateVariable;
@@ -57,7 +61,7 @@ namespace MVVMToolkit.Binding.Localization.Source
                 throw new BindingException($"No property with name: {key} found on type: {binding.GetType().Name}.");
             }
 
-            group = new(() => new((INotifyPropertyChanged)property.GetValue(binding)));
+            group = new(() => new((INotifyPropertyChanged)property.GetValue(binding), Parent));
             variableLookup.Add(key, group);
             return true;
         }
