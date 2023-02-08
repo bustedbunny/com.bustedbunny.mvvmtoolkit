@@ -2,7 +2,10 @@
 
 Model-View-ViewModel Toolkit for using with Unity's UI Toolkit.
 
-Main goal of this project - bring MVVM into UI Toolkit
+Main goal of this project - bring MVVM into UI Toolkit.
+
+Reminder: this is WIP and until first stable release
+many breaking changes might be pushed without a warning.
 
 [Read more about CommunityToolkit.MVVM](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/mvvm/)
 
