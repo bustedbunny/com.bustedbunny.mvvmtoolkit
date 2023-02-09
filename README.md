@@ -39,7 +39,7 @@ many breaking changes might be pushed without a warning.
 
 ### General requirements
 
-* UniTask. It is used widely to provide spike less Localization's string generation.
+* [UniTask](https://github.com/Cysharp/UniTask). It is used widely to provide spike less Localization's string generation.
 * Net Standard 2.1
 * Unity 2022.2+. While all previous version are also partially supported 
 (as long as they support NS 2.1 and UniTask), 
