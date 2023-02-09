@@ -10,39 +10,39 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
-  m_Name: TestLocalizationTable Shared Data
+  m_Name: SampleViewTable Shared Data
   m_EditorClassIdentifier: 
-  m_TableCollectionName: TestLocalizationTable
-  m_TableCollectionNameGuidString: 7b8cfd31915654e46a34ed12caab5bc2
+  m_TableCollectionName: SampleViewTable
+  m_TableCollectionNameGuidString: 2fdf0044c3c86034f835118994e4344d
   m_Entries:
-  - m_Id: 17014337536
+  - m_Id: 16263557120
     m_Key: Text
     m_Metadata:
       m_Items: []
-  - m_Id: 453178669805568
+  - m_Id: 29169430528
     m_Key: VariableTest
     m_Metadata:
       m_Items: []
-  - m_Id: 455706732015616
+  - m_Id: 56679870464
     m_Key: NestedTest
     m_Metadata:
       m_Items: []
-  - m_Id: 463677906104320
+  - m_Id: 79345889280
     m_Key: AdvancedNestedTest
     m_Metadata:
       m_Items: []
-  - m_Id: 4974541992505344
+  - m_Id: 107435143168
     m_Key: NestedLocalizedString
     m_Metadata:
       m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
-    rid: 6133111623286784024
+    rid: 3990636988199075840
   references:
     version: 2
     RefIds:
-    - rid: 6133111623286784024
+    - rid: 3990636988199075840
       type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
       data:
-        m_CustomEpoch: 1674654246161
+        m_CustomEpoch: 1675951433757

@@ -1,13 +1,21 @@
 {
-  "name": "com.bustedbunny.mvptoolkit",
+  "name": "com.bustedbunny.mvvmtoolkit",
   "version": "0.5.0",
-  "displayName": "Model-View-Presentation Toolkit",
+  "displayName": "Model-View-ViewModel Toolkit",
   "description": "This package brings MVVM to Unity UI Toolkit.",
   "unity": "2022.2",
   "unityRelease": "1f1",
   "dependencies": {
-    "com.unity.localization": "1.4.3"
+    "com.unity.localization": "1.4.3",
+    "com.unity.collections": "1.2.4"
   },
+  "samples": [
+    {
+      "displayName": "Sample View",
+      "description": "Simple view featuring most features from the package",
+      "path": "Samples~/SampleView"
+    }
+  ],
   "author": {
     "name": "bustedbunny",
     "email": "bustedbunny@bk.ru"

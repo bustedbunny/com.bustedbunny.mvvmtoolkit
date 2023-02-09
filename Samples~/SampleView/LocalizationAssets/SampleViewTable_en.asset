@@ -10,44 +10,44 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
-  m_Name: TestLocalizationTable_en
+  m_Name: SampleViewTable_en
   m_EditorClassIdentifier: 
   m_LocaleId:
     m_Code: en
-  m_SharedData: {fileID: 11400000, guid: 7ee396bd6bb540068593155f6ff4a63c, type: 2}
+  m_SharedData: {fileID: 11400000, guid: 2fdf0044c3c86034f835118994e4344d, type: 2}
   m_Metadata:
     m_Items:
-    - rid: 6133111651638444037
+    - rid: 3990636988199075841
   m_TableData:
-  - m_Id: 17014337536
+  - m_Id: 16263557120
     m_Localized: This is a test locale
     m_Metadata:
       m_Items: []
-  - m_Id: 453178669805568
+  - m_Id: 29169430528
     m_Localized: Test int = {>TestInt}
     m_Metadata:
       m_Items:
-      - rid: 6133111651638444037
-  - m_Id: 455706732015616
+      - rid: 3990636988199075841
+  - m_Id: 56679870464
     m_Localized: Nested float = {#Group>NestedFloat} Nested bool = {#Group>NestedBool}
     m_Metadata:
       m_Items:
-      - rid: 6133111651638444037
-  - m_Id: 463677906104320
+      - rid: 3990636988199075841
+  - m_Id: 79345889280
     m_Localized: Nested float = {#Group:{>NestedFloat} Deep bool = {#Deep:{>NestedBool}
       Deep float = {>NestedFloat}} }
     m_Metadata:
       m_Items:
-      - rid: 6133111651638444037
-  - m_Id: 4974541992505344
+      - rid: 3990636988199075841
+  - m_Id: 107435143168
     m_Localized: 'This is a nested localized string: {@AdvancedNestedTest}'
     m_Metadata:
       m_Items:
-      - rid: 6133111651638444037
+      - rid: 3990636988199075841
   references:
     version: 2
     RefIds:
-    - rid: 6133111651638444037
+    - rid: 3990636988199075841
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 0030a2e1299c01000030e27d769e01000030e26cb6a50100003062c669fb0300003062d051ac1100
+        m_Entries: 0030a203190000000030627912000000003062320d0000000030a2ca06000000
