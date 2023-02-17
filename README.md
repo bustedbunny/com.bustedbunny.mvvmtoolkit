@@ -28,7 +28,7 @@ many breaking changes might be pushed without a warning.
 ## Roadmap
 
 * ~~Tooltip text binding.~~ ~~Tooltips don't work in runtime :(~~
-* Tooltips extension.
+* ~~Tooltips extension.~~ Done.
 * ~~Nested variable support for smart-string~~ Done.
 * ~~Burst-compatible wrapper for Messenger.~~ Done.
 * Localization Asset Table support.
@@ -39,12 +39,13 @@ many breaking changes might be pushed without a warning.
 
 ### General requirements
 
-* [UniTask](https://github.com/Cysharp/UniTask). It is used widely to provide spike less Localization's string generation.
+* [UniTask](https://github.com/Cysharp/UniTask). It is used widely to provide spike less Localization's string
+  generation.
 * Net Standard 2.1
-* Unity 2022.2+. While all previous version are also partially supported 
-(as long as they support NS 2.1 and UniTask), 
-2022.2 also supports Roslyn 4.0.1 API which gives an 
-opportunity to use all power of CommunityToolkit.mvvm source generators.
+* Unity 2022.2+. While all previous version are also partially supported
+  (as long as they support NS 2.1 and UniTask),
+  2022.2 also supports Roslyn 4.0.1 API which gives an
+  opportunity to use all power of CommunityToolkit.mvvm source generators.
 * '#', '>' and '@' symbols are reserved in Localization package operators
 
 ### Make a basic view
@@ -197,6 +198,8 @@ In order to bind `TextElement`'s `text` value to localized string we need:
 Binding automatically updates `text` value on every table change.
 For example when we switch language or when we modify table in editor.
 
+_You can also bind tooltips with this, using `tooltip` attribute._
+
 ### Smart-string binding
 
 Now we want to display some variables.
@@ -205,6 +208,8 @@ We need to make our Localization entry `Smart` and define variables with `>` ope
 Variable name must match Property on `BindingContext` (`ViewModel` our `View` is attached to).
 
 ![image](https://user-images.githubusercontent.com/30902981/215571532-e4fd0421-7a35-4620-b6a9-eab813faaa31.png)
+
+_You can also bind tooltips with this, using `tooltip` attribute._
 
 ```csharp
 public partial class TestViewModel : ViewModel
