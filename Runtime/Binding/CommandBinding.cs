@@ -36,10 +36,7 @@ namespace MVVMToolkit.Binding
             Element = element;
 
             BindingUtility.GetTargetObject(boundObject, selectors[0], out var target, out var propertyName);
-
-            var boundType = target.GetType();
-            var commandProperty = boundType.GetProperty(propertyName,
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty);
+            var commandProperty = PropertyUtility.GetGetProperty(target, propertyName);
 
             Debug.Assert(commandProperty != null, nameof(commandProperty) + " != null");
             Command = (IRelayCommand)commandProperty.GetValue(target);

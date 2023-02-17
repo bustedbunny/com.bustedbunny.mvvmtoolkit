@@ -37,10 +37,7 @@ namespace MVVMToolkit.Binding.Generics
         {
             BindingUtility.GetTargetObject(binding, key, out var target, out var propertyName);
 
-            const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty |
-                                       BindingFlags.GetProperty;
-
-            var property = target.GetType().GetProperty(propertyName, flags);
+            var property = PropertyUtility.GetGetSetProperty(target, propertyName);
             Debug.Assert(property != null, nameof(property) + " != null");
             var get = Get<T0>(property.GetGetMethod(), target);
             var set = Set<T0>(property.GetSetMethod(), target);

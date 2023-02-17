@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using JetBrains.Annotations;
 using MVVMToolkit.Binding.Generics;
 using MVVMToolkit.Binding.Localization.Source;
 using UnityEngine;
@@ -69,14 +70,8 @@ namespace MVVMToolkit.Binding
                 return solver.SolveValueChanged(type, element, key, binding);
             }
 
-            throw new BindingException($"No IGenericsSolver found for type {type.Name}.");
-        }
-
-        public static bool TryGetPropertyGet(object source, string propertyName, out PropertyInfo property)
-        {
-            const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty;
-            property = source.GetType().GetProperty(propertyName, flags);
-            return property is not null;
+            throw new BindingException(
+                $"No IGenericsSolver found for type {type.Name}. ValueChanged binding must have one.");
         }
 
         public static Action StringFormatSetAction(object binding, string format, object[] array, int index,
@@ -84,10 +79,7 @@ namespace MVVMToolkit.Binding
         {
             BindingUtility.GetTargetObject(binding, format, out target, out propertyName);
 
-            if (!TryGetPropertyGet(target, propertyName, out var property))
-            {
-                throw new BindingException($"Type {target.GetType().Name} has no property of name {propertyName}.");
-            }
+            var property = PropertyUtility.GetGetProperty(target, propertyName);
 
             if (SolverMap.TryGetValue(property.PropertyType, out var solver))
             {

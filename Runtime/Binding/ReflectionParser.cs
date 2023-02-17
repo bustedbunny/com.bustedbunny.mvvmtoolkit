@@ -27,26 +27,6 @@ namespace MVVMToolkit.Binding
         private readonly PropertyChangedEventHandler _action;
         private readonly INotifyPropertyChanged _binding;
 
-        private static void GetTargetProperty(object root, string key, out object target, out PropertyInfo property)
-        {
-            var paths = key.Split('.');
-
-            target = root;
-            var rootType = root.GetType();
-            for (int i = 0; i < paths.Length - 1; i++)
-            {
-                var path = paths[i];
-                property = rootType.GetProperty(path, BindingFlags.Instance | BindingFlags.Public);
-                rootType = property.PropertyType;
-                target = property.GetValue(target);
-            }
-
-            var lenght = paths.Length;
-            property = rootType.GetProperty(paths[lenght - 1], BindingFlags.Instance | BindingFlags.Public);
-            if (property is null)
-                throw new BindingException($"Type {rootType.Name} has no property of name {paths[lenght - 1]}.");
-        }
-
         public ReflectionBinding(VisualElement element, string key, INotifyPropertyChanged binding)
         {
             _binding = binding;
@@ -56,8 +36,11 @@ namespace MVVMToolkit.Binding
             separator++;
             var right = key[separator..];
 
-            GetTargetProperty(element, left, out var setTarget, out var setProp);
-            GetTargetProperty(binding, right, out var getTarget, out var getProp);
+            BindingUtility.GetTargetObject(element, left, out var setTarget, out var setPropName);
+            BindingUtility.GetTargetObject(binding, right, out var getTarget, out var getPropName);
+
+            var setProp = PropertyUtility.GetSetProperty(setTarget, setPropName);
+            var getProp = PropertyUtility.GetGetProperty(getTarget, getPropName);
 
             Assert.AreEqual(setProp.PropertyType, getProp.PropertyType);
             var propertyName = getProp.Name;

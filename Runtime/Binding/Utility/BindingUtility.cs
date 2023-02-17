@@ -6,11 +6,6 @@ namespace MVVMToolkit.Binding
 {
     public static class BindingUtility
     {
-        public static PropertyInfo GetProperty(object obj, string propertyName)
-        {
-            return obj.GetType().GetProperty(propertyName, BindingFlags.Instance);
-        }
-
         public static string[] GetFormatKeys(string str)
         {
             var count = 0;
@@ -57,30 +52,6 @@ namespace MVVMToolkit.Binding
             public StringParsingException(string message) : base(message) { }
         }
 
-        public static bool GetTargetObjectSafe(object root, string key, out object target, out PropertyInfo property)
-        {
-            target = root;
-            property = null;
-
-            var paths = key.Split('.');
-            property = GetGetProperty(target.GetType(), paths[0]);
-            for (int i = 1; i < paths.Length; i++)
-            {
-                if (property is null) return false;
-
-                target = property.GetValue(target);
-                property = GetGetProperty(target.GetType(), paths[i]);
-                if (property is null) return false;
-            }
-
-            return true;
-        }
-
-        public static PropertyInfo GetGetProperty(Type type, string name)
-        {
-            return type.GetProperty(name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty);
-        }
-
         public static void GetTargetObject(object root, string key, out object target, out string propertyName)
         {
             Throw.ThrowNullOrEmpty(key);
@@ -96,9 +67,7 @@ namespace MVVMToolkit.Binding
             {
                 var path = paths[i];
                 var type = target.GetType();
-                var nestedProperty = type.GetProperty(path,
-                    BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetProperty);
-                Debug.Assert(nestedProperty != null, $"Nested property getter is null for type {type.Name}");
+                var nestedProperty = PropertyUtility.GetGetProperty(type, path);
                 target = nestedProperty.GetValue(target);
                 Debug.Assert(root != null, $"Obtained nested object is null in type {type.Name}");
             }
