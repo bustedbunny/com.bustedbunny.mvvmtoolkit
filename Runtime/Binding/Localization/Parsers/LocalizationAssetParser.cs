@@ -8,21 +8,23 @@ namespace MVVMToolkit.Binding.Localization
     {
         private readonly LocalizedAssetTable[] _assetTables;
 
-        public LocalizationAssetParser(INotifyPropertyChanged binding, LocalizedAssetTable[] assetTables) : base(binding)
+        public LocalizationAssetParser(INotifyPropertyChanged binding, LocalizedAssetTable[] assetTables) :
+            base(binding)
         {
             _assetTables = assetTables;
         }
 
-        public override void Process(VisualElement element, string key)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public override char Symbol() => '#';
+        public override void Process(VisualElement element, string key) { }
     }
 
     public class LocalizedAssetBinding : IElementBinding
     {
+        public LocalizedAssetBinding(INotifyPropertyChanged binding, LocalizedAssetTable table, string key)
+        {
+            var kek = table.GetTable();
+        }
+
         public void Unbind() { }
     }
 }

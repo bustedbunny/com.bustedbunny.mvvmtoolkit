@@ -12,10 +12,13 @@ namespace MVVMToolkit
 {
     public class BaseView : UIObject, IRecipient<CloseViewsMessage>
     {
-        [FormerlySerializedAs("localizationTable")] [SerializeField]
-        private LocalizedStringTable[] localizationTables;
+        [SerializeField] private LocalizedAssetTable[] _localizationAssetTables;
+        public LocalizedAssetTable[] LocalizedAssetTables => _localizationAssetTables;
 
-        protected LocalizedStringTable[] LocalizedTables => localizationTables;
+        [FormerlySerializedAs("localizationTables")] [SerializeField]
+        private LocalizedStringTable[] _localizationStringTables;
+
+        public LocalizedStringTable[] LocalizedStringTables => _localizationStringTables;
         [SerializeField] private VisualTreeAsset asset;
         protected VisualTreeAsset Asset => asset;
         [SerializeField] private int sortLayer;
@@ -39,7 +42,7 @@ namespace MVVMToolkit
         }
 
         protected virtual BindingParser ResolveBinding() =>
-            new BindingParser(BindingContext, RootVisualElement, LocalizedTables);
+            new BindingParser(BindingContext, RootVisualElement, LocalizedStringTables);
 
         public void Initialize()
         {
