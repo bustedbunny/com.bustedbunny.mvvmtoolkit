@@ -59,7 +59,7 @@ namespace MVVMToolkit.Binding
         private void OnValueChanged(ChangeEvent<T> evt) => _setter(evt.newValue);
 
 
-        public override void Dispose()
+        public override void Unbind()
         {
             _boundObject.PropertyChanged -= OnBoundObjectOnPropertyChanged;
             _element.UnregisterValueChangedCallback(OnValueChanged);
@@ -68,6 +68,6 @@ namespace MVVMToolkit.Binding
 
     public abstract class ValueChangedBinding : IElementBinding
     {
-        public abstract void Dispose();
+        public abstract void Unbind();
     }
 }

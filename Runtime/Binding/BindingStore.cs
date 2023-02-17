@@ -23,7 +23,7 @@ namespace MVVMToolkit.Binding
         {
             foreach (var (bind, _) in boundingMap)
             {
-                bind.Dispose();
+                bind.Unbind();
             }
 
             boundingMap.Clear();
@@ -41,6 +41,6 @@ namespace MVVMToolkit.Binding
 
     public interface IElementBinding
     {
-        public void Dispose();
+        public void Unbind();
     }
 }

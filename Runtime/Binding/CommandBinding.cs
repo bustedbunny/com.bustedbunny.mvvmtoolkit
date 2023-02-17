@@ -72,7 +72,7 @@ namespace MVVMToolkit.Binding
         }
 
 
-        public void Dispose()
+        public void Unbind()
         {
             Command.CanExecuteChanged -= SetCanExecute;
             Element.UnregisterCallback<ClickEvent>(OnClick);

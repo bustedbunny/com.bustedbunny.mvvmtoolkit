@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
 using UnityEngine.Localization.Tables;
@@ -71,7 +70,7 @@ namespace MVVMToolkit.Binding.Localization
         private void StringChanged(string value) => _operation(_element, value);
 
 
-        public void Dispose()
+        public void Unbind()
         {
             _cts.Cancel();
             _cts.Dispose();
