@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using MVVMToolkit.Binding.Localization.Source;
 using UnityEngine.Localization;
-using UnityEngine.Localization.Tables;
 using UnityEngine.UIElements;
 
 namespace MVVMToolkit.Binding.Localization
@@ -15,14 +14,13 @@ namespace MVVMToolkit.Binding.Localization
         private readonly BindingGroup _rootBinding;
         private readonly LocalizedString _localizedString;
 
-        public LocalizedTextBinding(TextElement element, INotifyPropertyChanged binding, string key,
-            TableReference table,
+        public LocalizedTextBinding(TextElement element, INotifyPropertyChanged binding, LocalizedString ls,
             Action<VisualElement, string> operation)
         {
             _operation = operation;
             _element = element;
 
-            _localizedString = new(table, key);
+            _localizedString = ls;
 
             _rootBinding = new(binding, _localizedString);
 

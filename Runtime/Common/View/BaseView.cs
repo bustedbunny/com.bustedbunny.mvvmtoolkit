@@ -42,7 +42,7 @@ namespace MVVMToolkit
         }
 
         protected virtual BindingParser ResolveBinding() =>
-            new BindingParser(BindingContext, RootVisualElement, LocalizedStringTables);
+            new BindingParser(BindingContext, RootVisualElement, LocalizedStringTables, LocalizedAssetTables);
 
         public void Initialize()
         {

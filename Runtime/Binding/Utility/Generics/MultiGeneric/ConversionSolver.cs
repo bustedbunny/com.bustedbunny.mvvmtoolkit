@@ -1,13 +1,28 @@
 using System;
+using System.Reflection;
+using MVVMToolkit.Binding.Localization;
+using UnityEngine.Localization;
+using Object = UnityEngine.Object;
 
 namespace MVVMToolkit.Binding.Generics
 {
-    public class ConversionSolver<T0, T1> : IConversionSolver
+    public abstract class ConversionSolver<TSet, TGet> : IConversionSolver where TGet : Object
     {
-        public bool CanSolve(Type first, Type second)
+        public Type SetType => typeof(TSet);
+
+        public bool CanSolve(Type set, Type get)
         {
-            if (typeof(T0) == first && typeof(T1) == second) return true;
-            return typeof(T1) == first && typeof(T0) == second;
+            return typeof(TSet) == set && typeof(TGet) == get;
+        }
+
+        protected abstract void AssignValue(Action<TSet> setter, TGet value);
+
+        public LocalizedAssetBinding ResolveBinding(PropertyInfo setProp, object target, LocalizedAssetTable table,
+            string key)
+        {
+            var set = HelpersGenerics.Set<TSet>(setProp.GetSetMethod(true), target);
+            var action = new Action<Object>(value => AssignValue(set, (TGet)value));
+            return new LocalizedAssetBinding<TGet>(table, key, action);
         }
     }
 }

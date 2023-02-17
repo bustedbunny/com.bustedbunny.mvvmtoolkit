@@ -1,5 +1,7 @@
+using System;
 using System.ComponentModel;
 using System.Reflection;
+using MVVMToolkit.Binding.Generics;
 using UnityEngine.Assertions;
 using UnityEngine.UIElements;
 
@@ -18,7 +20,7 @@ namespace MVVMToolkit.Binding
 
         public override void Process(VisualElement element, string key)
         {
-            boundingMap.Add(new ReflectionBinding(element, key, _binding), key);
+            boundingMap.Add(new(element, key, _binding), key);
         }
     }
 
@@ -31,18 +33,12 @@ namespace MVVMToolkit.Binding
         {
             _binding = binding;
 
-            var separator = key.IndexOf('=');
-            var left = key[..separator];
-            separator++;
-            var right = key[separator..];
-
-            BindingUtility.GetTargetObject(element, left, out var setTarget, out var setPropName);
-            BindingUtility.GetTargetObject(binding, right, out var getTarget, out var getPropName);
-
-            var setProp = PropertyUtility.GetSetProperty(setTarget, setPropName);
-            var getProp = PropertyUtility.GetGetProperty(getTarget, getPropName);
+            ResolveBinding(element, _binding, key,
+                out var getTarget, out var setTarget,
+                out var getProp, out var setProp);
 
             Assert.AreEqual(setProp.PropertyType, getProp.PropertyType);
+
             var propertyName = getProp.Name;
 
 
@@ -68,6 +64,22 @@ namespace MVVMToolkit.Binding
             {
                 _binding.PropertyChanged -= _action;
             }
+        }
+
+        private static void ResolveBinding(object element, object binding, string key,
+            out object getTarget, out object setTarget,
+            out PropertyInfo getProp, out PropertyInfo setProp)
+        {
+            var separator = key.IndexOf('=');
+            var left = key[..separator];
+            separator++;
+            var right = key[separator..];
+
+            BindingUtility.GetTargetObject(element, left, out setTarget, out var setPropName);
+            BindingUtility.GetTargetObject(binding, right, out getTarget, out var getPropName);
+
+            setProp = PropertyUtility.GetSetProperty(setTarget, setPropName);
+            getProp = PropertyUtility.GetGetProperty(getTarget, getPropName);
         }
     }
 }

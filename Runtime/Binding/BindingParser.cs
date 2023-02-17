@@ -21,7 +21,8 @@ namespace MVVMToolkit.Binding
         private readonly List<IBindingParser> _viewDataKeyStores = new();
         private readonly INotifyPropertyChanged _binding;
 
-        public BindingParser(INotifyPropertyChanged model, VisualElement root, LocalizedStringTable[] tables)
+        public BindingParser(INotifyPropertyChanged model, VisualElement root, LocalizedStringTable[] stringTables,
+            LocalizedAssetTable[] assetTables)
         {
             _binding = model;
 
@@ -31,12 +32,12 @@ namespace MVVMToolkit.Binding
 
             _rootVisualElement = root;
 
-            if (tables.Length > 0)
+            if (stringTables.Length > 0)
             {
                 // UnsafeAs allows to skip some checks
-                _textStores.Add(new LocalizationTextParser(model, tables,
+                _textStores.Add(new LocalizationTextParser(model, stringTables,
                     static (element, s) => Unsafe.As<TextElement>(element).text = s));
-                _tooltipStores.Add(new TooltipLocalizationParser(model, tables,
+                _tooltipStores.Add(new TooltipLocalizationParser(model, stringTables,
                     TooltipUtility.TooltipBindingOperation));
             }
 
@@ -46,6 +47,7 @@ namespace MVVMToolkit.Binding
             _viewDataKeyStores.Add(new ClickParser(model));
             _viewDataKeyStores.Add(new ValueChangedParser(model));
             _viewDataKeyStores.Add(new ReflectionParser(model));
+            _viewDataKeyStores.Add(new LocalizationAssetParser(assetTables));
 
             ParseBindings();
         }

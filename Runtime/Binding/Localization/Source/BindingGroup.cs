@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using MVVMToolkit.Binding.Generics;
 using UnityEngine.Localization;
 using UnityEngine.Localization.SmartFormat.Core.Extensions;
 using UnityEngine.Localization.SmartFormat.PersistentVariables;

@@ -23,7 +23,8 @@ namespace MVVMToolkit.Binding.Localization
         {
             var text = (TextElement)element;
             var table = GetMatchingTable(_stringTables, key);
-            var binding = new LocalizedTextBinding(text, bindingContext, key, table, _bindingOperation);
+            var ls = new LocalizedString(table, key);
+            var binding = new LocalizedTextBinding(text, bindingContext, ls, _bindingOperation);
             boundingMap.Add(binding, key);
         }
 

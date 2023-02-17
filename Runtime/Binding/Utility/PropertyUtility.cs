@@ -17,7 +17,10 @@ namespace MVVMToolkit.Binding
         [return: NotNull]
         public static PropertyInfo GetGetProperty(Type type, string propertyName)
         {
-            const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty;
+            const BindingFlags flags = BindingFlags.Instance |
+                                       BindingFlags.Public |
+                                       BindingFlags.NonPublic |
+                                       BindingFlags.GetProperty;
             return GetProperty(type, propertyName, flags);
         }
 
@@ -30,7 +33,10 @@ namespace MVVMToolkit.Binding
         [return: NotNull]
         public static PropertyInfo GetSetProperty(Type type, string propertyName)
         {
-            const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty;
+            const BindingFlags flags = BindingFlags.Instance |
+                                       BindingFlags.Public |
+                                       BindingFlags.NonPublic |
+                                       BindingFlags.SetProperty;
             return GetProperty(type, propertyName, flags);
         }
 
@@ -43,7 +49,10 @@ namespace MVVMToolkit.Binding
         [return: NotNull]
         public static PropertyInfo GetGetSetProperty(Type type, string propertyName)
         {
-            const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty |
+            const BindingFlags flags = BindingFlags.Instance |
+                                       BindingFlags.Public |
+                                       BindingFlags.NonPublic |
+                                       BindingFlags.GetProperty |
                                        BindingFlags.SetProperty;
             return GetProperty(type, propertyName, flags);
         }
@@ -53,7 +62,20 @@ namespace MVVMToolkit.Binding
         {
             var property = type.GetProperty(propertyName, flags);
             if (property is null)
+            {
+                // Fallback if property is explicitly declared as interface
+                var properties = type.GetProperties(flags);
+                foreach (var propertyInfo in properties)
+                {
+                    if (propertyInfo.Name.EndsWith(propertyName))
+                    {
+                        return propertyInfo;
+                    }
+                }
+
                 throw new BindingException($"Type {type.Name} has no property of name {propertyName}.");
+            }
+
             return property;
         }
     }

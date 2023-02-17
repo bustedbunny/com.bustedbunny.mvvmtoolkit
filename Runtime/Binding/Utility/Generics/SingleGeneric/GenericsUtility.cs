@@ -2,13 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
-using JetBrains.Annotations;
-using MVVMToolkit.Binding.Generics;
 using MVVMToolkit.Binding.Localization.Source;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace MVVMToolkit.Binding
+namespace MVVMToolkit.Binding.Generics
 {
     public static class GenericsUtility
     {

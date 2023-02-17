@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using MVVMToolkit.Binding.Generics;
 using UnityEngine.UIElements;
 
 namespace MVVMToolkit.Binding
