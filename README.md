@@ -31,7 +31,7 @@ many breaking changes might be pushed without a warning.
 * ~~Tooltips extension.~~ Done.
 * ~~Nested variable support for smart-string~~ Done.
 * ~~Burst-compatible wrapper for Messenger.~~ Done.
-* Localization Asset Table support.
+* ~~Localization Asset Table support.~~ Done.
 * ~~Localization Multi-Table support.~~ Done.
 * Binding type conversion support.
 
@@ -95,11 +95,13 @@ So far our scene looks like this and now we need to `Initialize` our `UIRoot`.
 Let's create a simple script to do so:
 
 ```csharp
-public class UIInitializer : MonoBehaviour
+public class SampleUIInitializer : MonoBehaviour
 {
     // Internally UI is initialized in Awake
-    // Actual initialization should be done at least during Start 
-    void Start()
+    // Actual initialization should be done at least after Start 
+    void Start() => InitializeAsync().Forget();
+
+    private async UniTask InitializeAsync()
     {
         var root = GetComponent<UIRoot>();
 
@@ -107,7 +109,12 @@ public class UIInitializer : MonoBehaviour
         // If you have external services on which your Views or ViewModels rely you must register them
         // before calling Initialize.
         var messenger = new StrongReferenceMessenger();
-        root.Initialize(messenger, new());
+        var serviceProvider = new ServiceProvider();
+
+        // Before we can make any calls to UI, we need to await it's initialization
+        await root.Initialize(messenger, serviceProvider);
+
+        messenger.Send<OpenTestViewMessage>();
     }
 }
 ```
@@ -163,7 +170,7 @@ public class UIInitializer : MonoBehaviour
     {
         ...
         
-        root.Initialize(messenger, new());
+        await root.Initialize(messenger, serviceProvider);
         messenger.Send<OpenTestViewMessage>();
     }
 }
