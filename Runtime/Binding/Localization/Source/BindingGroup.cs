@@ -56,7 +56,7 @@ namespace MVVMToolkit.Binding.Localization.Source
                 return true;
             }
 
-            if (!BindUtils.TryGetPropertyGet(binding, key, out var property))
+            if (!GenericsUtility.TryGetPropertyGet(binding, key, out var property))
             {
                 throw new BindingException($"No property with name: {key} found on type: {binding.GetType().Name}.");
             }
@@ -73,12 +73,12 @@ namespace MVVMToolkit.Binding.Localization.Source
                 return true;
             }
 
-            if (!BindUtils.TryGetPropertyGet(binding, key, out var property))
+            if (!GenericsUtility.TryGetPropertyGet(binding, key, out var property))
             {
                 throw new BindingException($"No property with name: {key} found on type: {binding.GetType().Name}.");
             }
 
-            variable = BindUtils.LocalizationVariable(property, binding);
+            variable = GenericsUtility.LocalizationVariable(property, binding);
             variableLookup.Add(key, variable);
             return true;
         }
