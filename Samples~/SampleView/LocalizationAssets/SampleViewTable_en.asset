@@ -44,10 +44,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 3990636988199075841
+  - m_Id: 2839319758909440
+    m_Localized: This is a tooltip. Variable = {>Counter}
+    m_Metadata:
+      m_Items:
+      - rid: 3990636988199075841
   references:
     version: 2
     RefIds:
     - rid: 3990636988199075841
       type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
       data:
-        m_Entries: 0030a203190000000030627912000000003062320d0000000030a2ca06000000
+        m_Entries: 0030a203190000000030627912000000003062320d0000000030a2ca060000000030a2a558160a00

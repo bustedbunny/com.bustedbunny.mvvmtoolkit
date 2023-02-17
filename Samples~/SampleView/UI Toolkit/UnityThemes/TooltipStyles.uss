@@ -1,0 +1,7 @@
+.MVVMTK-tooltip-container {
+    background-color: rgba(47, 47, 47, 0.24);
+}
+
+.MVVMTK-tooltip-label {
+    font-size: 42px;
+}

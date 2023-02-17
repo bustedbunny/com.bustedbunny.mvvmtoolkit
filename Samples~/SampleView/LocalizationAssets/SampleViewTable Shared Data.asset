@@ -23,6 +23,10 @@ MonoBehaviour:
     m_Key: VariableTest
     m_Metadata:
       m_Items: []
+  - m_Id: 2839319758909440
+    m_Key: TooltipTest
+    m_Metadata:
+      m_Items: []
   - m_Id: 56679870464
     m_Key: NestedTest
     m_Metadata:

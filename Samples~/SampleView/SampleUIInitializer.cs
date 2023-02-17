@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.Messaging;
+using Cysharp.Threading.Tasks;
 using MVVMToolkit;
 using UnityEngine;
 
@@ -9,7 +10,9 @@ public class SampleUIInitializer : MonoBehaviour
 {
     // Internally UI is initialized in Awake
     // Actual initialization should be done at least after Start 
-    void Start()
+    void Start() => InitializeAsync().Forget();
+
+    private async UniTask InitializeAsync()
     {
         var root = GetComponent<UIRoot>();
 
@@ -17,7 +20,9 @@ public class SampleUIInitializer : MonoBehaviour
         // If you have external services on which your Views or ViewModels rely you must register them
         // before calling Initialize.
         var messenger = new StrongReferenceMessenger();
-        root.Initialize(messenger, new());
+
+        // Before we can make any calls to UI, we need to await it's initialization
+        await root.Initialize(messenger, new());
 
         messenger.Send<OpenTestViewMessage>();
     }
