@@ -34,7 +34,7 @@ namespace MVVMToolkit.Binding
             if (tables.Length > 0)
             {
                 // UnsafeAs allows to skip some checks
-                _textStores.Add(new LocalizationParser(model, tables,
+                _textStores.Add(new LocalizationTextParser(model, tables,
                     static (element, s) => Unsafe.As<TextElement>(element).text = s));
                 _tooltipStores.Add(new TooltipLocalizationParser(model, tables,
                     TooltipUtility.TooltipBindingOperation));

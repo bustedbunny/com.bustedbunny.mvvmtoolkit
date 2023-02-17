@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 namespace MVVMToolkit.Binding.Tooltips
 {
-    public class TooltipLocalizationParser : LocalizationParser
+    public class TooltipLocalizationParser : LocalizationTextParser
     {
         public TooltipLocalizationParser(INotifyPropertyChanged viewModel, LocalizedStringTable[] stringTables,
             Action<VisualElement, string> bindingOperation) : base(viewModel, stringTables, bindingOperation) { }

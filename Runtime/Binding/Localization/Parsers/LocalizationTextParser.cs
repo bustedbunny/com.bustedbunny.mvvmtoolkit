@@ -5,13 +5,13 @@ using UnityEngine.UIElements;
 
 namespace MVVMToolkit.Binding.Localization
 {
-    public class LocalizationParser : BindingParser<LocalizedTextBinding>
+    public class LocalizationTextParser : BindingParser<LocalizedTextBinding>
     {
         private readonly LocalizedStringTable[] _stringTables;
         private readonly Action<VisualElement, string> _bindingOperation;
         public override char Symbol() => '#';
 
-        public LocalizationParser(INotifyPropertyChanged viewModel, LocalizedStringTable[] stringTables,
+        public LocalizationTextParser(INotifyPropertyChanged viewModel, LocalizedStringTable[] stringTables,
             Action<VisualElement, string> bindingOperation) : base(viewModel)
         {
             _stringTables = stringTables;
