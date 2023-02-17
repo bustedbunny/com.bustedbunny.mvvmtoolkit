@@ -17,20 +17,20 @@ namespace MVVMToolkit.Binding
         [return: NotNull]
         public static PropertyInfo GetGetProperty(Type type, string propertyName)
         {
-            const BindingFlags flags = BindingFlags.Instance & BindingFlags.Public & BindingFlags.GetProperty;
+            const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty;
             return GetProperty(type, propertyName, flags);
         }
 
         [return: NotNull]
         public static PropertyInfo GetSetProperty(object source, string propertyName)
         {
-            return GetGetProperty(source.GetType(), propertyName);
+            return GetSetProperty(source.GetType(), propertyName);
         }
 
         [return: NotNull]
         public static PropertyInfo GetSetProperty(Type type, string propertyName)
         {
-            const BindingFlags flags = BindingFlags.Instance & BindingFlags.Public & BindingFlags.SetProperty;
+            const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty;
             return GetProperty(type, propertyName, flags);
         }
 
@@ -43,7 +43,7 @@ namespace MVVMToolkit.Binding
         [return: NotNull]
         public static PropertyInfo GetGetSetProperty(Type type, string propertyName)
         {
-            const BindingFlags flags = BindingFlags.Instance & BindingFlags.Public & BindingFlags.GetProperty &
+            const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty |
                                        BindingFlags.SetProperty;
             return GetProperty(type, propertyName, flags);
         }
