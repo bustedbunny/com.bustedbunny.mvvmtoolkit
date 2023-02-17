@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using UnityEngine.Localization;
+using UnityEngine.Localization.Tables;
 using UnityEngine.UIElements;
 
 namespace MVVMToolkit.Binding.Localization
@@ -21,8 +22,22 @@ namespace MVVMToolkit.Binding.Localization
         public override void Process(VisualElement element, string key)
         {
             var text = (TextElement)element;
-            var binding = new LocalizedTextBinding(text, bindingContext, key, _stringTables, _bindingOperation);
+            var table = GetMatchingTable(_stringTables, key);
+            var binding = new LocalizedTextBinding(text, bindingContext, key, table, _bindingOperation);
             boundingMap.Add(binding, key);
+        }
+
+        private static TableReference GetMatchingTable(LocalizedStringTable[] tables, string key)
+        {
+            foreach (var table in tables)
+            {
+                if (table.TableReference.SharedTableData.Contains(key))
+                {
+                    return table.TableReference;
+                }
+            }
+
+            throw new BindingException($"No key: {key} found in provided tables.");
         }
     }
 }

@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.Messaging;
+using Cysharp.Threading.Tasks;
 using MVVMToolkit.DependencyInjection;
 using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 using UnityEngine.UIElements;
 
 namespace MVVMToolkit
@@ -32,8 +35,7 @@ namespace MVVMToolkit
         private readonly List<BaseView> _views = new();
         private readonly List<ViewModel> _viewModels = new();
 
-
-        public void Initialize(StrongReferenceMessenger messenger, ServiceProvider serviceProvider)
+        public async UniTask Initialize(StrongReferenceMessenger messenger, ServiceProvider serviceProvider)
         {
             if (Root is not null) throw new InvalidOperationException("Cannot initialize UIRoot multiple times");
 
@@ -46,7 +48,48 @@ namespace MVVMToolkit
                 serviceProvider.RegisterService(viewModel);
             }
 
-            foreach (var view in GetComponentsInChildren<BaseView>()) _views.Add(view);
+
+            var views = GetComponentsInChildren<BaseView>();
+
+            var stringTables = new HashSet<LocalizedStringTable>(views.Length);
+            var assetTables = new HashSet<LocalizedAssetTable>(views.Length);
+
+            foreach (var view in GetComponentsInChildren<BaseView>())
+            {
+                _views.Add(view);
+
+                // We also collect all tables so we can await their load
+                foreach (var stringTable in view.LocalizedStringTables)
+                {
+                    stringTables.Add(stringTable);
+                }
+
+                foreach (var assetTable in view.LocalizedAssetTables)
+                {
+                    assetTables.Add(assetTable);
+                }
+            }
+
+            // First we await for localization settings to load
+            await LocalizationSettings.InitializationOperation;
+
+
+            // Then we await for each registered table to load
+            foreach (var table in stringTables)
+            {
+                var handle = table.CurrentLoadingOperationHandle;
+                if (!handle.IsValid()) handle = table.GetTableAsync();
+
+                await handle;
+            }
+
+            foreach (var table in assetTables)
+            {
+                var handle = table.CurrentLoadingOperationHandle;
+                if (!handle.IsValid()) handle = table.GetTableAsync();
+
+                await handle;
+            }
 
 
             // After all services have been registered we do dependency injection
