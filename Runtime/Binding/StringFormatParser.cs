@@ -29,7 +29,7 @@ namespace MVVMToolkit.Binding
         private readonly string _key;
         private readonly Action<VisualElement, string> _operation;
 
-        private readonly (string, Func<object>, object)[] _bindings;
+        private readonly (string, Action, object)[] _bindings;
         private readonly object[] _return;
 
         private readonly string _format;
@@ -49,18 +49,18 @@ namespace MVVMToolkit.Binding
                 return;
             }
 
-            _bindings = new (string, Func<object>, object)[formats.Length];
+            _bindings = new (string, Action, object)[formats.Length];
             _return = new object[formats.Length];
 
             for (int i = 0; i < formats.Length; i++)
             {
                 var format = formats[i];
-                BindingUtility.GetTargetObject(binding, format, out var target, out var propertyName);
 
-                var get = DelegateUtility.GenerateGetter(target, propertyName);
+                var setAction = GenericsUtility.StringFormatSetAction(_binding, format, _return, i,
+                    out var propertyName, out var target);
 
-                _bindings[i] = (propertyName, get, target);
-                _return[i] = get();
+                _bindings[i] = (propertyName, setAction, target);
+                setAction();
             }
 
             _format = _key;
@@ -82,19 +82,16 @@ namespace MVVMToolkit.Binding
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            for (var i = 0; i < _bindings.Length; i++)
+            foreach (var (name, setAction, _) in _bindings)
             {
-                var (name, func, _) = _bindings[i];
-                if (e.PropertyName == name)
-                {
-                    _return[i] = func();
-                    UpdateString();
-                    return;
-                }
+                if (e.PropertyName != name) continue;
+                setAction();
+                UpdateString();
+                return;
             }
         }
 
-        public void Dispose()
+        public void Unbind()
         {
             if (_binding is not null)
                 _binding.PropertyChanged -= OnPropertyChanged;

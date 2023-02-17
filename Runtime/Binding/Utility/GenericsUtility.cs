@@ -9,9 +9,9 @@ using UnityEngine.UIElements;
 
 namespace MVVMToolkit.Binding
 {
-    public static class BindUtils
+    public static class GenericsUtility
     {
-        static BindUtils()
+        static GenericsUtility()
         {
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -77,6 +77,28 @@ namespace MVVMToolkit.Binding
             const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty;
             property = source.GetType().GetProperty(propertyName, flags);
             return property is not null;
+        }
+
+        public static Action StringFormatSetAction(object binding, string format, object[] array, int index,
+            out string propertyName, out object target)
+        {
+            BindingUtility.GetTargetObject(binding, format, out target, out propertyName);
+
+            if (!TryGetPropertyGet(target, propertyName, out var property))
+            {
+                throw new BindingException($"Type {target.GetType().Name} has no property of name {propertyName}.");
+            }
+
+            if (SolverMap.TryGetValue(property.PropertyType, out var solver))
+            {
+                return solver.SolveArraySetElement(property, target, array, index);
+            }
+
+            var targetCopy = target;
+
+            // Reflection fallback
+            Debug.LogWarning($"Had to do a reflection fallback with type {property.PropertyType.Name}");
+            return () => array[index] = property.GetValue(targetCopy);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace MVVMToolkit.Binding
                 if (impl.GetGenericTypeDefinition() == typeof(INotifyValueChanged<>))
                 {
                     var targetType = impl.GetGenericArguments()[0];
-                    var binding = BindUtils.ValueChangedBinding(targetType, element, key, bindingContext);
+                    var binding = GenericsUtility.ValueChangedBinding(targetType, element, key, bindingContext);
                     boundingMap.Add(binding, key);
                     return;
                 }

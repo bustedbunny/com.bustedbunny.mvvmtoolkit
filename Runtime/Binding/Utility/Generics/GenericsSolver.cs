@@ -48,5 +48,12 @@ namespace MVVMToolkit.Binding.Generics
             return new ValueChangedBinding<T0>((INotifyValueChanged<T0>)element, (INotifyPropertyChanged)target, set,
                 get, propertyName);
         }
+
+        public Action SolveArraySetElement(PropertyInfo propertyInfo, object source, object[] array, int index)
+        {
+            var get = Get<T0>(propertyInfo.GetGetMethod(), source);
+
+            return () => array[index] = get();
+        }
     }
 }

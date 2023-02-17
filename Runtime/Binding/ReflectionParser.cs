@@ -63,7 +63,7 @@ namespace MVVMToolkit.Binding
             var propertyName = getProp.Name;
 
 
-            var setAction = BindUtils.SetAction(getProp, getTarget, setProp, setTarget);
+            var setAction = GenericsUtility.SetAction(getProp, getTarget, setProp, setTarget);
 
             _action = (_, args) =>
             {

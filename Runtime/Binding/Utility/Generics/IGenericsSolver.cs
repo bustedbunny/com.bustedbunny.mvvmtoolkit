@@ -16,5 +16,7 @@ namespace MVVMToolkit.Binding.Generics
 
         public ValueChangedBinding SolveValueChanged(Type type, VisualElement element, string key,
             INotifyPropertyChanged binding);
+
+        public Action SolveArraySetElement(PropertyInfo propertyInfo, object source, object[] array, int index);
     }
 }
