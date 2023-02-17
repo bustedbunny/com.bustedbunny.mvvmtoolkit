@@ -5,7 +5,7 @@ using UnityEngine.Localization.Settings;
 namespace MVVMToolkit.Settings
 {
     // ReSharper disable once InconsistentNaming
-    public class MVVMTKSettings : ScriptableObject, IReset, IDisposable
+    internal class MVVMTKSettings : ScriptableObject, IReset, IDisposable
     {
         private static MVVMTKSettings _instance;
 
