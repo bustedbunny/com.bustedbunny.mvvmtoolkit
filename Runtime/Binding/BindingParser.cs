@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using MVVMToolkit.Binding.Localization;
+using MVVMToolkit.Binding.Tooltips;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.UIElements;
@@ -31,15 +33,15 @@ namespace MVVMToolkit.Binding
 
             if (tables.Length > 0)
             {
+                // UnsafeAs allows to skip some checks
                 _textStores.Add(new LocalizationParser(model, tables,
-                    static (element, s) => ((TextElement)element).text = s));
-
-                // _tooltipStores.Add(new LocalizationParser(model, table,
-                //     static (element, s) => element.tooltip = s));
+                    static (element, s) => Unsafe.As<TextElement>(element).text = s));
+                _tooltipStores.Add(new TooltipLocalizationParser(model, tables,
+                    TooltipUtility.TooltipBindingOperation));
             }
 
             _textStores.Add(new StringFormatParser(model, static (element, s) => ((TextElement)element).text = s));
-            // _tooltipStores.Add(new StringFormatParser(model, static (element, s) => element.tooltip = s));
+            _tooltipStores.Add(new TooltipFormatParser(model, TooltipUtility.TooltipBindingOperation));
 
             _viewDataKeyStores.Add(new ClickParser(model));
             _viewDataKeyStores.Add(new ValueChangedParser(model));
@@ -47,6 +49,7 @@ namespace MVVMToolkit.Binding
 
             ParseBindings();
         }
+
 
         private void ParseBindings()
         {
@@ -105,8 +108,7 @@ namespace MVVMToolkit.Binding
                         }
                         catch (Exception e)
                         {
-                            Debug.LogError(
-                                $"Key that caused error: {key}. Binding type: {_binding.GetType()}");
+                            Debug.LogError($"Key that caused error: {key}. Binding type: {_binding.GetType()}");
                             Debug.LogException(e);
                         }
                     }
@@ -115,7 +117,7 @@ namespace MVVMToolkit.Binding
             PostBindingCallback(stores);
         }
 
-        private void PostBindingCallback(List<IBindingParser> stores)
+        private static void PostBindingCallback(List<IBindingParser> stores)
         {
             foreach (var store in stores)
             {
