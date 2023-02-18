@@ -141,6 +141,8 @@ namespace MVVMToolkit.Binding.Tooltips
                 _currentPanel = target.panel;
             }
 
+            _tooltip.Text = target.tooltip;
+
             target.RegisterCallback<AttachToPanelEvent>(OnPanelAttached);
             target.RegisterCallback<DetachFromPanelEvent>(OnPanelDetached);
             target.RegisterCallback<TooltipChangedEvent>(OnTooltipEvent);
