@@ -34,7 +34,7 @@ many breaking changes might be pushed without a warning.
 * ~~Burst-compatible wrapper for Messenger.~~ Done.
 * ~~Localization Asset Table support.~~ Done.
 * ~~Localization Multi-Table support.~~ Done.
-* Binding type conversion support.
+* ~~Binding type conversion support.~~ Done.
 
 ## How to:
 
