@@ -39,7 +39,7 @@ namespace MVVMToolkit
         {
             if (Root is not null) throw new InvalidOperationException("Cannot initialize UIRoot multiple times");
 
-            Root = new VisualElement { style = { flexGrow = 1f } };
+            Root = new() { style = { flexGrow = 1f } };
             UIDocument = uiDocument;
 
             foreach (var viewModel in GetComponentsInChildren<ViewModel>())

@@ -85,7 +85,7 @@ namespace MVVMToolkit.Messaging
         {
             ThrowIfNull(response);
 
-            _responses.Add(new TaskOrFunc { task = response, isTask = true });
+            _responses.Add(new() { task = response, isTask = true });
         }
 
         private static void ThrowIfNull<TY>(TY obj)
@@ -105,7 +105,7 @@ namespace MVVMToolkit.Messaging
         {
             ThrowIfNull(response);
 
-            _responses.Add(new TaskOrFunc { func = response, isTask = false });
+            _responses.Add(new() { func = response, isTask = false });
         }
 
         /// <summary>

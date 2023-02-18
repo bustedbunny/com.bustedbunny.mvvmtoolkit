@@ -17,7 +17,6 @@ namespace MVVMToolkit.Binding.Tooltips
         public override void Process(VisualElement element, string key)
         {
             base.Process(element, key);
-            element.tooltip = key;
             var tooltip = new TooltipManipulator();
             _manipulators.Add(tooltip);
             element.AddManipulator(tooltip);

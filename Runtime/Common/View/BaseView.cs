@@ -35,14 +35,14 @@ namespace MVVMToolkit
         {
             var root = asset.Instantiate();
             // root.style.flexGrow = new StyleFloat(1f);
-            root.style.height = new StyleLength(Length.Percent(100f));
-            root.style.width = new StyleLength(Length.Percent(100f));
-            root.style.position = new StyleEnum<Position>(Position.Absolute);
+            root.style.height = new(Length.Percent(100f));
+            root.style.width = new(Length.Percent(100f));
+            root.style.position = new(Position.Absolute);
             return root;
         }
 
         protected virtual BindingParser ResolveBinding() =>
-            new BindingParser(BindingContext, RootVisualElement, LocalizedStringTables, LocalizedAssetTables);
+            new(BindingContext, RootVisualElement, LocalizedStringTables, LocalizedAssetTables);
 
         public void Initialize()
         {
@@ -58,10 +58,10 @@ namespace MVVMToolkit
 
 
         protected virtual void OnEnable() =>
-            RootVisualElement.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.Flex);
+            RootVisualElement.style.display = new(DisplayStyle.Flex);
 
         protected virtual void OnDisable() =>
-            RootVisualElement.style.display = new StyleEnum<DisplayStyle>(DisplayStyle.None);
+            RootVisualElement.style.display = new(DisplayStyle.None);
 
         protected virtual void OnDestroy()
         {

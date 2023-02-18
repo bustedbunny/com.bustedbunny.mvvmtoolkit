@@ -23,7 +23,7 @@ namespace MVVMToolkit
             var container = parent.RootVisualElement.Q(containerName);
             if (container is null)
             {
-                throw new Exception(
+                throw new(
                     $"No VisualElement with name: {containerName} was found in hierarchy instantiated from {parent.name}.");
             }
 

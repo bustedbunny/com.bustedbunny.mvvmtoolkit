@@ -19,7 +19,7 @@ namespace MVVMToolkit.Binding
 
         public override void Process(VisualElement element, string key)
         {
-            boundingMap.Add(new StringFormatBinding(bindingContext, element, key, _operation), key);
+            boundingMap.Add(new(bindingContext, element, key, _operation), key);
         }
     }
 
@@ -27,7 +27,6 @@ namespace MVVMToolkit.Binding
     {
         private readonly INotifyPropertyChanged _binding;
         private readonly VisualElement _element;
-        private readonly string _key;
         private readonly Action<VisualElement, string> _operation;
 
         private readonly (string, Action, object)[] _bindings;
@@ -40,7 +39,6 @@ namespace MVVMToolkit.Binding
         {
             _binding = binding;
             _element = element;
-            _key = key;
             _operation = operation;
 
             var formats = BindingUtility.GetFormatKeys(key);
@@ -64,7 +62,7 @@ namespace MVVMToolkit.Binding
                 setAction();
             }
 
-            _format = _key;
+            _format = key;
 
             for (var i = 0; i < formats.Length; i++)
             {
