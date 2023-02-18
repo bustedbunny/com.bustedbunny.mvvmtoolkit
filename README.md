@@ -254,6 +254,10 @@ bindings: **Localization** or **string.Format**.
 <ui:Label text="String Format tooltip" tooltip="$This is a tooltip with variable = {Counter}"/>
 ```
 
+`TooltipElement` consists of `VisualElemet` and `Label`, which
+have `MVVMTK-tooltip-container` and `MVVMTK-tooltip-label` USS classes,
+so you can override them with your USS styles.
+
 ### Input binding
 
 To bind a button to specific method we will need to
