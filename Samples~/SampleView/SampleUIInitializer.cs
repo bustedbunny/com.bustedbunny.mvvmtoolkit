@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Cysharp.Threading.Tasks;
 using MVVMToolkit;
+using MVVMToolkit.DependencyInjection;
 using UnityEngine;
 
 // This is just an example of how you can initialize your UI
@@ -20,9 +21,10 @@ public class SampleUIInitializer : MonoBehaviour
         // If you have external services on which your Views or ViewModels rely you must register them
         // before calling Initialize.
         var messenger = new StrongReferenceMessenger();
+        var serviceProvider = new ServiceProvider();
 
         // Before we can make any calls to UI, we need to await it's initialization
-        await root.Initialize(messenger, new());
+        await root.Initialize(messenger, serviceProvider);
 
         messenger.Send<OpenTestViewMessage>();
     }

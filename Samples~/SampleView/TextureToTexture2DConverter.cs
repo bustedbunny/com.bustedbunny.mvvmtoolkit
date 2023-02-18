@@ -1,11 +1,10 @@
-using System;
 using MVVMToolkit.Binding.Generics;
 using UnityEngine;
+using UnityEngine.Scripting;
 
-public class TextureToTexture2DConverter : ConversionSolver<Texture, Texture2D>
+// Converter need to be preserved in case you use code stripping
+[Preserve]
+public class TextureToTexture2DConverter : MultiSolver<Texture2D, Texture>
 {
-    protected override void AssignValue(Action<Texture> setter, Texture2D value)
-    {
-        setter(value);
-    }
+    protected override Texture Convert(Texture2D value) => value;
 }
