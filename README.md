@@ -48,7 +48,7 @@ many breaking changes might be pushed without a warning.
   (as long as they support NS 2.1 and UniTask),
   2022.2 also supports Roslyn 4.0.1 API which gives an
   opportunity to use all power of CommunityToolkit.mvvm source generators.
-* '#', '>' and '@' symbols are reserved in Localization package operators
+* `#,` `>` and `@` symbols are reserved in Localization package operators
 
 ### Make a basic view
 
