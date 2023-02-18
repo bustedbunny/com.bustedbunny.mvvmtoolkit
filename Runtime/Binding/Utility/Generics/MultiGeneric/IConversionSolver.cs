@@ -8,7 +8,8 @@ namespace MVVMToolkit.Binding.Generics
 {
     public interface IConversionSolver
     {
-        public Type SetType { get; }
+        public Type GetterType { get; }
+        public Type SetterType { get; }
 
 
         public LocalizedAssetBinding ResolveBinding(PropertyInfo setProp, object target, LocalizedAssetTable table,
@@ -17,7 +18,7 @@ namespace MVVMToolkit.Binding.Generics
 
     public static class ConversionUtility
     {
-        private static readonly Dictionary<Type, IConversionSolver> SolverMap = new();
+        private static readonly Dictionary<(Type, Type), IConversionSolver> SolverMap = new();
 
         static ConversionUtility()
         {
@@ -28,21 +29,22 @@ namespace MVVMToolkit.Binding.Generics
                     if (!type.IsAbstract && typeof(IConversionSolver).IsAssignableFrom(type))
                     {
                         var solver = (IConversionSolver)Activator.CreateInstance(type);
-                        SolverMap.Add(solver.SetType, solver);
+                        SolverMap.Add((solver.GetterType, solver.SetterType), solver);
                     }
                 }
             }
         }
 
         public static LocalizedAssetBinding Binding(PropertyInfo setProp, object target, LocalizedAssetTable table,
-            string key)
+            string key, Type assetType)
         {
-            var type = setProp.PropertyType;
+            var setterType = setProp.PropertyType;
 
-            if (!SolverMap.TryGetValue(type, out var solver))
+            if (!SolverMap.TryGetValue((assetType, setterType), out var solver))
             {
                 throw new BindingException(
-                    $"Couldn't find solver for type {type.Name}. Implement one to use Asset Binding.");
+                    $"Couldn't find solver for pair {assetType.Name}->{setterType.Name}." +
+                    $" Implement ConversionSolver<{setterType.Name}, {assetType.Name}>.");
             }
 
             return solver.ResolveBinding(setProp, target, table, key);

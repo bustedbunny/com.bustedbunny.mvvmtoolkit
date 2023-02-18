@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using MVVMToolkit.Binding.Generics;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Tables;
@@ -27,19 +29,27 @@ namespace MVVMToolkit.Binding.Localization
             separator++;
             var bindingKey = key[separator..];
 
-            var table = GetTable(assetKey);
+            var table = GetTable(assetKey, out var assetType);
 
             BindingUtility.GetTargetObject(element, bindingKey, out var setTarget, out var setPropName);
             var setProp = PropertyUtility.GetSetProperty(setTarget, setPropName);
 
-            boundingMap.Add(ConversionUtility.Binding(setProp, setTarget, table, assetKey), key);
+            boundingMap.Add(ConversionUtility.Binding(setProp, setTarget, table, assetKey, assetType), key);
         }
 
-        private LocalizedAssetTable GetTable(string assetKey)
+        private LocalizedAssetTable GetTable(string assetKey, out Type assetType)
         {
             foreach (var assetTable in _assetTables)
             {
                 if (!assetTable.TableReference.SharedTableData.Contains(assetKey)) continue;
+
+                var table = assetTable.GetTableAsync();
+                if (!table.IsDone)
+                {
+                    throw new BindingException("Table is not ready");
+                }
+
+                assetType = table.Result.First().Value.GetExpectedType();
                 return assetTable;
             }
 
@@ -47,12 +57,7 @@ namespace MVVMToolkit.Binding.Localization
         }
     }
 
-    public abstract class LocalizedAssetBinding : IElementBinding
-    {
-        public abstract void Unbind();
-    }
-
-    public class LocalizedAssetBinding<T> : LocalizedAssetBinding where T : Object
+    public class LocalizedAssetBinding : IElementBinding
     {
         private readonly LocalizedAssetTable _table;
         private readonly Action<Object> _operation;
@@ -70,12 +75,12 @@ namespace MVVMToolkit.Binding.Localization
             if (loading.IsDone) OnTableChange(loading.Result);
         }
 
-        private AsyncOperationHandle<T> _curOperation;
+        private AsyncOperationHandle<Object> _curOperation;
 
 
         private void OnTableChange(AssetTable value)
         {
-            _curOperation = Addressables.LoadAssetAsync<T>(value[_assetKey].Guid);
+            _curOperation = Addressables.LoadAssetAsync<Object>(value[_assetKey].Guid);
             if (_curOperation.IsDone)
             {
                 CurOperationOnCompleted(_curOperation);
@@ -86,12 +91,12 @@ namespace MVVMToolkit.Binding.Localization
             }
         }
 
-        private void CurOperationOnCompleted(AsyncOperationHandle<T> obj)
+        private void CurOperationOnCompleted(AsyncOperationHandle<Object> obj)
         {
             _operation(obj.Result);
         }
 
-        public override void Unbind()
+        public void Unbind()
         {
             _table.TableChanged -= OnTableChange;
         }
