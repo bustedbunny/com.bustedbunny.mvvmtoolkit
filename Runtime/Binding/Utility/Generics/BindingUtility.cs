@@ -39,8 +39,8 @@ namespace MVVMToolkit.Binding.Generics
 
         public static Action SetAction(PropertyInfo get, object source, PropertyInfo set, object target)
         {
-            var getMethod = get.GetGetMethod();
-            var setMethod = set.GetSetMethod();
+            var getMethod = get.GetGetMethod(true);
+            var setMethod = set.GetSetMethod(true);
 
             var getType = get.PropertyType;
             var setType = set.PropertyType;
@@ -70,7 +70,7 @@ namespace MVVMToolkit.Binding.Generics
 
         public static ILocalizationVariable LocalizationVariable(PropertyInfo property, object binding)
         {
-            var getMethod = property.GetGetMethod();
+            var getMethod = property.GetGetMethod(true);
 
             if (SingleMap.TryGetValue(getMethod.ReturnType, out var solver))
             {
