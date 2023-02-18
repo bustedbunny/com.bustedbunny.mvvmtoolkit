@@ -16,6 +16,7 @@ many breaking changes might be pushed without a warning.
 - [Enabling/Disabling View](#enablingdisabling-view)
 - [Localization text binding](#localization-text-binding)
 - [Smart-string binding](#smart-string-binding)
+- [Tooltip Binding](#tooltip-binding)
 - [Input binding](#input-binding)
 - [Value Changed binding](#value-changed-binding)
 - [Reflection binding](#reflection-binding)
@@ -236,6 +237,22 @@ In our `.uxml` asset we define `text` attribute with entry's key with `#` operat
 ```
 
 Now our `View` will be automatically updated as we change `TestInt` property value.
+
+### Tooltip Binding
+
+In order to enable custom tooltips with binding support - just use
+`tooltip` attribute for any `VisualElement` with any of supported
+bindings: **Localization** or **string.Format**.
+
+```uxml
+
+<ui:Label text="Localization tooltip" tooltip="#TooltipTest"/>
+```
+
+```uxml
+
+<ui:Label text="String Format tooltip" tooltip="$This is a tooltip with variable = {Counter}"/>
+```
 
 ### Input binding
 

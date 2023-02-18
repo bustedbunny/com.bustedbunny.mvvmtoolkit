@@ -7,7 +7,8 @@
         <ui:Image view-data-key="{#Flag>image}"/>
         <ui:Label text="#Text"/>
         <ui:Label text="#VariableTest"/>
-        <ui:Label text="Hover over me" tooltip="#TooltipTest"/>
+        <ui:Label text="Localization tooltip" tooltip="#TooltipTest"/>
+        <ui:Label text="String Format tooltip" tooltip="$This is a tooltip with variable = {Counter}"/>
         <ui:Label text="$Counter={Counter}"/>
         <ui:Button text="Counter" view-data-key="{@IncrementCommand}"/>
         <ui:IntegerField label="Counter" view-data-key="{%Counter}"/>
