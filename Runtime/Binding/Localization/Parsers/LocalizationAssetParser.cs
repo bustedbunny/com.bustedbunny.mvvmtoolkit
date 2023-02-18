@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using MVVMToolkit.Binding.Generics;
-using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Tables;

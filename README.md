@@ -18,12 +18,13 @@ many breaking changes might be pushed without a warning.
 - [Smart-string binding](#smart-string-binding)
 - [Input binding](#input-binding)
 - [Value Changed binding](#value-changed-binding)
-- [Custom Binding Type support](#custom-binding-type-support)
 - [Reflection binding](#reflection-binding)
 - [String format binding](#string-format-binding)
 - [Smart-String nested variables](#smart-string-nested-variables)
 - [Nested Localized String binding](#nested-localized-string-binding)
 - [Burst Messenger support](#burst-messenger-support)
+- [Localization Asset Binding](#localization-asset-binding)
+- [Binding Types Limitations](#binding-types-limitations)
 
 ## Roadmap
 
@@ -302,20 +303,6 @@ Value Changed binding uses `%` operator.
 Now `Counter` property value will be mirrored
 if you manually type a value into field.
 
-### Custom Binding Type support
-
-To avoid usage of slow reflection non-supported types will need have it's own
-`IGenericsSolver` implementation.
-
-The simplest way to do so,
-create a type which inherits from `GenericsSolver<T>`.
-
-```csharp
-public class MyTypeSolver : GenericsSolver<MyType> { }
-```
-
-*If non-supported property was used you will receive a warning in console.*
-
 ### Reflection binding
 
 Sometimes we want to bind something very custom and specific.
@@ -425,3 +412,81 @@ void Receive(object _, Wrapped<TestInt> message)
 }
 messenger.Register<Wrapped<TestInt>>(recipient, Receive);
 ```
+
+### Localization Asset Binding
+
+Asset binding is a special kind of reflection binding.
+Syntax works as follows:
+
+```uxml
+
+<ui:Image view-data-key="{#Flag>image}"/>
+```
+
+Where key must be stored in `view-data-key` attribute
+and start with `#` operator.
+
+After `#` follows table entry name.
+![image](https://user-images.githubusercontent.com/30902981/219870975-7588d0f8-996f-448b-8800-d06f35443207.png)
+
+After entry name follows `>` symbol. It is used as separator.
+
+And then property path of current `VisualElement` is specified.
+
+Property used in example:
+
+```csharp
+UnityEngine.UIElements.Image.image
+```
+
+### Binding Types Limitations
+
+In order to create bindings package relies
+on explicitly declared generic types.
+
+There are 2 types of those:
+
+1. `ISingleSolver` - provides binding support for specified type.
+2. `IMultiSolver` - provides binding support for
+   converting one type to another.
+
+For example there are some built in generics
+solvers implemented in package:
+
+```csharp
+    public class IntSolver : SingleSolver<int> { }
+    public class UintSolver : SingleSolver<uint> { }
+    public class ByteSolver : SingleSolver<byte> { }
+    public class FloatSolver : SingleSolver<float> { }
+    public class DoubleSolver : SingleSolver<double> { }
+    public class StringSolver : SingleSolver<string> { }
+    public class BoolSolver : SingleSolver<bool> { }
+```
+
+In order to support other types you need to implement solvers yourself
+simply inheriting from `SingleSolver<T>`.
+
+Some bindings rely on `IMultiSolver` and they must be implemented manually.
+For example this `MultiSolver` provides a way to convert `Texture2D`
+to `Texture`:
+
+```csharp
+// Converter need to be preserved in case you use code stripping
+[Preserve]
+public class TextureToTexture2DConverter : MultiSolver<Texture2D, Texture>
+{
+    protected override Texture Convert(Texture2D value) => value;
+}
+```
+
+`MultiSolver` requires to implement `Convert` method in which you
+specify how `Texture2D` is assigned to `Texture` setter.
+
+`IMultiSolver` are required for **Localized Asset Binding** or when
+you want to bind something that does not match types. For example `IStyle`
+properties usually use very specific types which are not convenient
+to work with in `ViewModel`, but can be implicitly converted.
+
+Most of the time when solvers are not available reflection fallback
+will be used with a warning. While fully functional, fallbacks are
+performance heavy and generate a lot of garbage when used.
