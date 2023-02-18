@@ -31,10 +31,10 @@ namespace MVVMToolkit.Binding.Localization
 
             var table = GetTable(assetKey, out var assetType);
 
-            BindingUtility.GetTargetObject(element, bindingKey, out var setTarget, out var setPropName);
+            ParsingUtility.GetTargetObject(element, bindingKey, out var setTarget, out var setPropName);
             var setProp = PropertyUtility.GetSetProperty(setTarget, setPropName);
 
-            boundingMap.Add(ConversionUtility.Binding(setProp, setTarget, table, assetKey, assetType), key);
+            boundingMap.Add(BindingUtility.AssetBinding(setProp, setTarget, table, assetKey, assetType), key);
         }
 
         private LocalizedAssetTable GetTable(string assetKey, out Type assetType)

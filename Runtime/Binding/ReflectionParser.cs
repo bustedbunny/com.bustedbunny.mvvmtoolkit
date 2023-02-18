@@ -42,7 +42,7 @@ namespace MVVMToolkit.Binding
             var propertyName = getProp.Name;
 
 
-            var setAction = GenericsUtility.SetAction(getProp, getTarget, setProp, setTarget);
+            var setAction = BindingUtility.SetAction(getProp, getTarget, setProp, setTarget);
 
             _action = (_, args) =>
             {
@@ -75,8 +75,8 @@ namespace MVVMToolkit.Binding
             separator++;
             var right = key[separator..];
 
-            BindingUtility.GetTargetObject(element, left, out setTarget, out var setPropName);
-            BindingUtility.GetTargetObject(binding, right, out getTarget, out var getPropName);
+            ParsingUtility.GetTargetObject(element, left, out setTarget, out var setPropName);
+            ParsingUtility.GetTargetObject(binding, right, out getTarget, out var getPropName);
 
             setProp = PropertyUtility.GetSetProperty(setTarget, setPropName);
             getProp = PropertyUtility.GetGetProperty(getTarget, getPropName);

@@ -31,7 +31,7 @@ namespace MVVMToolkit.Settings
 
             if (ReferenceEquals(_instance, null))
             {
-                Debug.LogWarning("Could not find localization settings. Default will be used.");
+                // Debug.LogWarning("Could not find localization settings. Default will be used.");
 
                 instance = CreateInstance<MVVMTKSettings>();
                 instance.name = "Default MVVMTK Settings";

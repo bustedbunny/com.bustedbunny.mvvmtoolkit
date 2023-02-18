@@ -9,7 +9,7 @@ namespace MVVMToolkit.RuntimeTests
         public static void TestFormatting()
         {
             var str = "Test {0} {Test} {@hello} {$'}";
-            var result = BindingUtility.GetFormatKeys(str);
+            var result = ParsingUtility.GetFormatKeys(str);
 
             CollectionAssert.AreEquivalent(result, new[] { "0", "Test", "@hello", "$'" });
         }
@@ -17,10 +17,10 @@ namespace MVVMToolkit.RuntimeTests
         [Test]
         public static void TestFormattingFail()
         {
-            Assert.Throws<BindingUtility.StringParsingException>(() =>
+            Assert.Throws<ParsingUtility.StringParsingException>(() =>
             {
                 var str = "Test {hello} {world welcome";
-                BindingUtility.GetFormatKeys(str);
+                ParsingUtility.GetFormatKeys(str);
             });
         }
     }

@@ -35,7 +35,7 @@ namespace MVVMToolkit.Binding
 
             Element = element;
 
-            BindingUtility.GetTargetObject(boundObject, selectors[0], out var target, out var propertyName);
+            ParsingUtility.GetTargetObject(boundObject, selectors[0], out var target, out var propertyName);
             var commandProperty = PropertyUtility.GetGetProperty(target, propertyName);
 
             Debug.Assert(commandProperty != null, nameof(commandProperty) + " != null");

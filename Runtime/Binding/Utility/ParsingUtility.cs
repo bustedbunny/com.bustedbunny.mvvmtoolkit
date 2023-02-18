@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace MVVMToolkit.Binding
 {
-    public static class BindingUtility
+    public static class ParsingUtility
     {
         public static string[] GetFormatKeys(string str)
         {

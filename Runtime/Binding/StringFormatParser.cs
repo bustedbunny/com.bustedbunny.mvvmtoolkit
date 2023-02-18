@@ -41,7 +41,7 @@ namespace MVVMToolkit.Binding
             _element = element;
             _operation = operation;
 
-            var formats = BindingUtility.GetFormatKeys(key);
+            var formats = ParsingUtility.GetFormatKeys(key);
             if (formats is null)
             {
                 Debug.LogError($"No variables found in key: {key}.");
@@ -55,7 +55,7 @@ namespace MVVMToolkit.Binding
             {
                 var format = formats[i];
 
-                var setAction = GenericsUtility.StringFormatSetAction(_binding, format, _return, i,
+                var setAction = BindingUtility.StringFormatSetAction(_binding, format, _return, i,
                     out var propertyName, out var target);
 
                 _bindings[i] = (propertyName, setAction, target);

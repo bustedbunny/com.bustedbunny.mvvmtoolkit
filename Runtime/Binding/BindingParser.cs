@@ -67,7 +67,7 @@ namespace MVVMToolkit.Binding
                 var key = keyGetter(element);
                 if (string.IsNullOrEmpty(key)) return;
 
-                var bindings = BindingUtility.GetFormatKeys(key);
+                var bindings = ParsingUtility.GetFormatKeys(key);
 
                 if (bindings is null) return;
 

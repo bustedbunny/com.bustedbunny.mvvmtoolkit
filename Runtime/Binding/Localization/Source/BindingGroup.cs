@@ -73,7 +73,7 @@ namespace MVVMToolkit.Binding.Localization.Source
 
             var property = PropertyUtility.GetGetProperty(binding, key);
 
-            variable = GenericsUtility.LocalizationVariable(property, binding);
+            variable = BindingUtility.LocalizationVariable(property, binding);
             variableLookup.Add(key, variable);
             return true;
         }
