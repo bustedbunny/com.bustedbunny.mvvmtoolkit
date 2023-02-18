@@ -30,6 +30,8 @@ namespace MVVMToolkit.Binding.Localization
 
 
             _localizedString.StringChanged += StringChanged;
+
+            _localizedString.GetLocalizedStringAsync().Completed += handle => { StringChanged(handle.Result); };
         }
 
         private void StringChanged(string value) => _operation(_element, value);
