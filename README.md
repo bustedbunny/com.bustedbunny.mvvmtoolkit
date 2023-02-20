@@ -43,12 +43,41 @@ many breaking changes might be pushed without a warning.
 
 * [UniTask](https://github.com/Cysharp/UniTask). It is used widely to provide spike less Localization's string
   generation.
-* Net Standard 2.1
+* Net Standard 2.1 in
+  Project Settings-Player-Configuration-Api Compatibility Level
 * Unity 2022.2+. While all previous version are also partially supported
   (as long as they support NS 2.1 and UniTask),
   2022.2 also supports Roslyn 4.0.1 API which gives an
   opportunity to use all power of CommunityToolkit.mvvm source generators.
 * `#,` `>` and `@` symbols are reserved in Localization package operators
+
+### Installation
+
+<details><summary>1. Install via Package Manager</summary>
+
+
+The package is available on the [OpenUPM](https://openupm.com/packages/com.bustedbunny.mvvmtoolkit/).
+
+- Open `Project Settings-Package Manager`
+- Add a new `Scoped Registry` (or edit the existing OpenUPM entry)
+
+  ```
+  Name      package.openupm.com
+  URL       https://package.openupm.com
+  Scope(s)  com.cysharp.unitask
+            com.bustedbunny.mvvmtoolkit
+  ```
+- Open `Window/Package Manager`
+- Select `My Registries`
+- Install `UniTask` and `UnityMvvmToolkit` packages
+
+</details>
+
+<details><summary>2. Install via Git URL</summary>
+
+You can add `https://github.com/bustedbunny/com.bustedbunny.mvvmtoolkit.git` to the Package Manager.
+
+</details>
 
 ### Make a basic view
 
