@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using Object = UnityEngine.Object;
 
 namespace MVVMToolkit.Binding.Generics
