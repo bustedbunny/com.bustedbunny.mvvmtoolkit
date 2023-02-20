@@ -61,12 +61,22 @@ The package is available on the [OpenUPM](https://openupm.com/packages/com.buste
 - Open `Project Settings-Package Manager`
 - Add a new `Scoped Registry` (or edit the existing OpenUPM entry)
 
-  ```
-  Name      package.openupm.com
-  URL       https://package.openupm.com
-  Scope(s)  com.cysharp.unitask
-            com.bustedbunny.mvvmtoolkit
-  ```
+URL
+
+```
+https://package.openupm.com
+```
+
+Scopes
+
+```
+com.cysharp.unitask
+```
+
+```
+com.bustedbunny.mvvmtoolkit
+```
+
 - Open `Window/Package Manager`
 - Select `My Registries`
 - Install `UniTask` and `Model-View-ViewModel Toolkit` packages
