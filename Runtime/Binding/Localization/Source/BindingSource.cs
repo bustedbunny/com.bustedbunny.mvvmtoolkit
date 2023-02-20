@@ -61,7 +61,8 @@ namespace MVVMToolkit.Binding.Localization.Source
                     break;
                 }
 
-                return false;
+                if (bindingGroup is null)
+                    return false;
             }
 
 
