@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -50,20 +49,6 @@ namespace MVVMToolkit.Messaging
         ///     // Process each document here...
         /// }
         /// </code>
-        /// If we also want to control the cancellation of the token passed to each subscriber to the message,
-        /// we can do so by passing a token we control to the returned message before starting the enumeration
-        /// (<see cref="TaskAsyncEnumerableExtensions.WithCancellation{T}(IAsyncEnumerable{T},CancellationToken)"/>).
-        /// The previous snippet with this additional change looks as follows:
-        /// <code>
-        /// await foreach (var document in Messenger.Default.Send&lt;OpenDocumentsRequestMessage&gt;().WithCancellation(cts.Token))
-        /// {
-        ///     // Process each document here...
-        /// }
-        /// </code>
-        /// When no more new items are needed (or for any other reason depending on the situation), the token
-        /// passed to the enumerator can be canceled (by calling <see cref="CancellationTokenSource.Cancel()"/>),
-        /// and that will also notify the remaining tasks in the request message. The token exposed by the message
-        /// itself will automatically be linked and canceled with the one passed to the enumerator.
         /// </summary>
         public CancellationToken CancellationToken => _cancellationTokenSource.Token;
 

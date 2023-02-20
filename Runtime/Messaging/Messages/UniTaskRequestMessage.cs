@@ -79,7 +79,7 @@ namespace MVVMToolkit.Messaging
         }
 
         /// <summary>
-        /// Throws an <see cref="InvalidOperationException"/> when <see cref="Reply(T)"/> or <see cref="Reply(Task{T})"/> are called twice.
+        /// Throws an <see cref="InvalidOperationException"/> when <see cref="Reply(T)"/> or <see cref="Reply(UniTask{T})"/> are called twice.
         /// </summary>
         [DoesNotReturn]
         private static void ThrowInvalidOperationExceptionForDuplicateReply()
