@@ -42,22 +42,18 @@ namespace MVVMToolkit
             Root = new() { style = { flexGrow = 1f } };
             UIDocument = uiDocument;
 
-            foreach (var viewModel in GetComponentsInChildren<ViewModel>())
+            GetComponentsInChildren(_viewModels);
+            foreach (var viewModel in _viewModels)
             {
-                _viewModels.Add(viewModel);
                 serviceProvider.RegisterService(viewModel);
             }
 
-
-            var views = GetComponentsInChildren<BaseView>();
-
-            var stringTables = new HashSet<LocalizedStringTable>(views.Length);
-            var assetTables = new HashSet<LocalizedAssetTable>(views.Length);
-
-            foreach (var view in GetComponentsInChildren<BaseView>())
+            GetComponentsInChildren(_views);
+            var stringTables = new HashSet<LocalizedStringTable>(_views.Count);
+            var assetTables = new HashSet<LocalizedAssetTable>(_views.Count);
+            
+            foreach (var view in _views)
             {
-                _views.Add(view);
-
                 // We also collect all tables so we can await their load
                 foreach (var stringTable in view.LocalizedStringTables)
                 {
