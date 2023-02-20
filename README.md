@@ -69,7 +69,7 @@ The package is available on the [OpenUPM](https://openupm.com/packages/com.buste
   ```
 - Open `Window/Package Manager`
 - Select `My Registries`
-- Install `UniTask` and `UnityMvvmToolkit` packages
+- Install `UniTask` and `Model-View-ViewModel Toolkit` packages
 
 </details>
 
