@@ -67,6 +67,12 @@ namespace MVVMToolkit.Binding
                 var path = paths[i];
                 var type = target.GetType();
                 var nestedProperty = PropertyUtility.GetGetProperty(type, path);
+                // if returned value is interface, we should obtain next property as interface
+                if (nestedProperty.PropertyType.IsInterface)
+                {
+                    paths[i + 1] = $"{nestedProperty.PropertyType.Name}." + paths[i + 1];
+                }
+
                 target = nestedProperty.GetValue(target);
                 Debug.Assert(root != null, $"Obtained nested object is null in type {type.Name}");
             }
