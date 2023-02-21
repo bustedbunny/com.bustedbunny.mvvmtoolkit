@@ -1,18 +1,19 @@
 {
   "name": "com.bustedbunny.mvvmtoolkit",
-  "version": "1.0.0-pre.2",
+  "version": "1.0.0-pre.3",
   "displayName": "Model-View-ViewModel Toolkit",
   "description": "This package brings MVVM to Unity UI Toolkit.",
   "unity": "2022.2",
   "unityRelease": "1f1",
   "dependencies": {
     "com.unity.localization": "1.4.3",
-    "com.unity.collections": "1.2.4"
+    "com.unity.collections": "1.2.4",
+    "com.cysharp.unitask" : "2.3.3"
   },
   "samples": [
     {
       "displayName": "Sample View",
-      "description": "Simple view featuring most features from the package",
+      "description": "Simple view featuring most of this package has to offer.",
       "path": "Samples~/SampleView"
     }
   ],
