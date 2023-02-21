@@ -46,11 +46,20 @@ namespace MVVMToolkit.Binding
             }
 
 
-            element.RegisterCallback<ClickEvent>(OnClick);
+            if (element is Button button)
+            {
+                button.clicked += OnClick;
+            }
+            else
+            {
+                element.RegisterCallback<ClickEvent>(OnClick);
+            }
+
             Command.CanExecuteChanged += SetCanExecute;
 
             SetCanExecute(null, null);
         }
+
 
         private static object ParseArgument(string key)
         {
@@ -60,7 +69,8 @@ namespace MVVMToolkit.Binding
             return key;
         }
 
-        private void OnClick(ClickEvent evt) => Command.Execute(_argument);
+        private void OnClick() => Command.Execute(_argument);
+        private void OnClick(ClickEvent evt) => OnClick();
 
         private void SetCanExecute(object sender, EventArgs eventArgs)
         {
@@ -71,7 +81,14 @@ namespace MVVMToolkit.Binding
         public void Unbind()
         {
             Command.CanExecuteChanged -= SetCanExecute;
-            Element.UnregisterCallback<ClickEvent>(OnClick);
+            if (Element is Button button)
+            {
+                button.clicked -= OnClick;
+            }
+            else
+            {
+                Element.UnregisterCallback<ClickEvent>(OnClick);
+            }
         }
     }
 }
