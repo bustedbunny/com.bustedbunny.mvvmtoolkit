@@ -40,6 +40,7 @@ namespace MVVMToolkit
             if (Root is not null) throw new InvalidOperationException("Cannot initialize UIRoot multiple times");
 
             Root = new() { style = { flexGrow = 1f } };
+            Root.pickingMode = PickingMode.Ignore;
             UIDocument = uiDocument;
 
             GetComponentsInChildren(_viewModels);
@@ -51,7 +52,7 @@ namespace MVVMToolkit
             GetComponentsInChildren(_views);
             var stringTables = new HashSet<LocalizedStringTable>(_views.Count);
             var assetTables = new HashSet<LocalizedAssetTable>(_views.Count);
-            
+
             foreach (var view in _views)
             {
                 // We also collect all tables so we can await their load
