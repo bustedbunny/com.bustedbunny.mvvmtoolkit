@@ -34,7 +34,7 @@ namespace MVVMToolkit
         protected virtual VisualElement Instantiate()
         {
             var root = asset.Instantiate();
-            // root.style.flexGrow = new StyleFloat(1f);
+            root.pickingMode = PickingMode.Ignore;
             root.style.height = new(Length.Percent(100f));
             root.style.width = new(Length.Percent(100f));
             root.style.position = new(Position.Absolute);
