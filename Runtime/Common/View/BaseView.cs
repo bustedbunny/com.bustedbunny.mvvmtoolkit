@@ -50,6 +50,9 @@ namespace MVVMToolkit
             {
                 BindingParser = ResolveBinding();
             }
+
+            if (enabled) OnEnable();
+            else OnDisable();
         }
 
         public virtual VisualElement ResolveParent() => null;
