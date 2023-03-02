@@ -34,10 +34,15 @@ namespace MVVMToolkit
 
         private readonly List<BaseView> _views = new();
         private readonly List<ViewModel> _viewModels = new();
+        private ServiceProvider _serviceProvider;
+        private StrongReferenceMessenger _messenger;
 
         public async UniTask Initialize(StrongReferenceMessenger messenger, ServiceProvider serviceProvider)
         {
             if (Root is not null) throw new InvalidOperationException("Cannot initialize UIRoot multiple times");
+
+            _messenger = messenger;
+            _serviceProvider = serviceProvider;
 
             Root = new() { style = { flexGrow = 1f } };
             Root.pickingMode = PickingMode.Ignore;
@@ -116,6 +121,18 @@ namespace MVVMToolkit
                     sortDict.TryGetValue(y, out var ySort);
                     return Comparer<int>.Default.Compare(xSort, ySort);
                 });
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (Root is null) return;
+
+            UIDocument = null;
+
+            foreach (var viewModel in _viewModels)
+            {
+                _serviceProvider.UnregisterService(viewModel);
             }
         }
     }
