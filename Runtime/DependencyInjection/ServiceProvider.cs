@@ -15,6 +15,26 @@ namespace MVVMToolkit.DependencyInjection
             _serviceMap.Add(service.GetType(), service);
         }
 
+        public void RegisterService<T>(object service)
+        {
+            if (service is not T)
+            {
+                throw new($"Tried to register service of type {service.GetType().Name} under type {typeof(T).Name}.");
+            }
+
+            _serviceMap.Add(typeof(T), service);
+        }
+
+        public void UnregisterService(object service)
+        {
+            _serviceMap.Remove(service.GetType());
+        }
+
+        public void UnregisterService<T>()
+        {
+            _serviceMap.Remove(typeof(T));
+        }
+
         public object GetService(Type serviceType)
         {
             return _serviceMap[serviceType];
