@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Tables;
@@ -24,8 +25,21 @@ namespace MVVMToolkit.Binding.Localization
             var text = (TextElement)element;
             var table = GetMatchingTable(_stringTables, key);
             var ls = new LocalizedString(table, key);
+            _lsList.Add(ls);
             var binding = new LocalizedTextBinding(text, bindingContext, ls, _bindingOperation);
             boundingMap.Add(binding, key);
+        }
+
+        private List<LocalizedString> _lsList = new();
+
+        public override void Dispose()
+        {
+            foreach (var ls in _lsList)
+            {
+                ((IDisposable)ls).Dispose();
+            }
+
+            base.Dispose();
         }
 
         private static TableReference GetMatchingTable(LocalizedStringTable[] tables, string key)
