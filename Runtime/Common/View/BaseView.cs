@@ -38,9 +38,6 @@ namespace MVVMToolkit
             var root = asset.Instantiate();
             root.AddToClassList(RootUssClassName);
             root.pickingMode = PickingMode.Ignore;
-            root.style.height = new(Length.Percent(100f));
-            root.style.width = new(Length.Percent(100f));
-            root.style.position = new(Position.Absolute);
             return root;
         }
 
@@ -66,14 +63,12 @@ namespace MVVMToolkit
 
         protected virtual void OnEnable()
         {
-            RootVisualElement.style.display = new(DisplayStyle.Flex);
             RootVisualElement.AddToClassList(EnabledClassName);
             RootVisualElement.RemoveFromClassList(DisabledClassName);
         }
 
         protected virtual void OnDisable()
         {
-            RootVisualElement.style.display = new(DisplayStyle.None);
             RootVisualElement.AddToClassList(DisabledClassName);
             RootVisualElement.RemoveFromClassList(EnabledClassName);
         }

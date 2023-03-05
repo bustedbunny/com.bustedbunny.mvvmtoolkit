@@ -1,0 +1,17 @@
+.mvvmtk-root, .mvvmtk-root-view-embedded {
+    flex-grow: 1;
+}
+
+.mvvmtk-root-view-base {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+.mvvmtk-enabled {
+    display: flex;
+}
+
+.mvvmtk-disabled {
+    display: none;
+}

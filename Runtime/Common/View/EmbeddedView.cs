@@ -17,7 +17,6 @@ namespace MVVMToolkit
             var root = Asset.Instantiate();
             root.AddToClassList(EmbeddedRootUssClassName);
             root.pickingMode = PickingMode.Ignore;
-            root.style.flexGrow = 1f;
             return root;
         }
 

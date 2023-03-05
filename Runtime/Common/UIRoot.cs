@@ -37,6 +37,9 @@ namespace MVVMToolkit
         private ServiceProvider _serviceProvider;
         private StrongReferenceMessenger _messenger;
 
+
+        public const string RootUssClassName = "mvvmtk-root";
+
         public async UniTask Initialize(StrongReferenceMessenger messenger, ServiceProvider serviceProvider)
         {
             if (Root is not null) throw new InvalidOperationException("Cannot initialize UIRoot multiple times");
@@ -44,7 +47,8 @@ namespace MVVMToolkit
             _messenger = messenger;
             _serviceProvider = serviceProvider;
 
-            Root = new() { style = { flexGrow = 1f } };
+            Root = new();
+            Root.AddToClassList(RootUssClassName);
             Root.pickingMode = PickingMode.Ignore;
             UIDocument = uiDocument;
 
