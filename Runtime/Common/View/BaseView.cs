@@ -31,9 +31,12 @@ namespace MVVMToolkit
 
         protected virtual void Awake() => RootVisualElement = Instantiate();
 
+        public const string RootUssClassName = "mvvmtk-root-view-base";
+
         protected virtual VisualElement Instantiate()
         {
             var root = asset.Instantiate();
+            root.AddToClassList(RootUssClassName);
             root.pickingMode = PickingMode.Ignore;
             root.style.height = new(Length.Percent(100f));
             root.style.width = new(Length.Percent(100f));
@@ -58,11 +61,22 @@ namespace MVVMToolkit
         public virtual VisualElement ResolveParent() => null;
 
 
-        protected virtual void OnEnable() =>
-            RootVisualElement.style.display = new(DisplayStyle.Flex);
+        public const string EnabledClassName = "mvvmtk-enabled";
+        public const string DisabledClassName = "mvvmtk-disabled";
 
-        protected virtual void OnDisable() =>
+        protected virtual void OnEnable()
+        {
+            RootVisualElement.style.display = new(DisplayStyle.Flex);
+            RootVisualElement.AddToClassList(EnabledClassName);
+            RootVisualElement.RemoveFromClassList(DisabledClassName);
+        }
+
+        protected virtual void OnDisable()
+        {
             RootVisualElement.style.display = new(DisplayStyle.None);
+            RootVisualElement.AddToClassList(DisabledClassName);
+            RootVisualElement.RemoveFromClassList(EnabledClassName);
+        }
 
         protected virtual void OnDestroy()
         {

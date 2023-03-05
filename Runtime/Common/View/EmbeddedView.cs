@@ -10,9 +10,12 @@ namespace MVVMToolkit
 
         [SerializeField] private BaseView parent;
 
+        public const string EmbeddedRootUssClassName = "mvvmtk-root-view-embedded";
+
         protected override VisualElement Instantiate()
         {
             var root = Asset.Instantiate();
+            root.AddToClassList(EmbeddedRootUssClassName);
             root.pickingMode = PickingMode.Ignore;
             root.style.flexGrow = 1f;
             return root;
