@@ -33,11 +33,18 @@ namespace MVVMToolkit
 
         public const string RootUssClassName = "mvvmtk-root-view-base";
 
-        protected virtual VisualElement Instantiate()
+        protected VisualElement InstantiateAsset()
         {
             var root = asset.Instantiate();
-            root.AddToClassList(RootUssClassName);
             root.pickingMode = PickingMode.Ignore;
+            root.name = gameObject.name;
+            return root;
+        }
+
+        protected virtual VisualElement Instantiate()
+        {
+            var root = InstantiateAsset();
+            root.AddToClassList(RootUssClassName);
             return root;
         }
 

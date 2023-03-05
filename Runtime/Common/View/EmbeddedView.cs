@@ -14,9 +14,8 @@ namespace MVVMToolkit
 
         protected override VisualElement Instantiate()
         {
-            var root = Asset.Instantiate();
+            var root = InstantiateAsset();
             root.AddToClassList(EmbeddedRootUssClassName);
-            root.pickingMode = PickingMode.Ignore;
             return root;
         }
 
