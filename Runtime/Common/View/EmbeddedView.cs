@@ -13,6 +13,7 @@ namespace MVVMToolkit
         protected override VisualElement Instantiate()
         {
             var root = Asset.Instantiate();
+            root.pickingMode = PickingMode.Ignore;
             root.style.flexGrow = 1f;
             return root;
         }
