@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace MVVMToolkit.Messaging
 {
-    public static class TypeManager
+    public static partial class TypeManager
     {
         private static bool _initialized;
 
@@ -21,16 +21,26 @@ namespace MVVMToolkit.Messaging
 
         private static void Initialize()
         {
-            if (_initialized) return;
-            _initialized = true;
-
             _typeMap = new();
 
 
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                foreach (var type in assembly.GetTypes())
+                var path = $"MVVMToolkit/{FolderName}/{assembly.GetName().Name}";
+                var json = Resources.Load<TextAsset>(path);
+
+                if (json is null)
                 {
+                    continue;
+                }
+
+                var types = JsonUtility.FromJson<SerializedTypes>(json.text);
+
+                foreach (var typeName in types.fullTypeNames)
+                {
+                    var type = assembly.GetType(typeName);
+
+
                     if (type.IsAbstract || !typeof(IUnmanagedMessage).IsAssignableFrom(type)) continue;
                     if (!UnsafeUtility.IsUnmanaged(type))
                     {
