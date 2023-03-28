@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Reflection;
 using MVVMToolkit.Binding.Localization;
 using MVVMToolkit.Binding.Localization.Source;
+using MVVMToolkit.TypeSerialization;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.UIElements;
@@ -18,21 +19,16 @@ namespace MVVMToolkit.Binding.Generics
 
         static BindingUtility()
         {
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            foreach (var type in TypeUtility.GetTypes(typeof(ISingleSolver)))
             {
-                foreach (var type in assembly.GetTypes())
-                {
-                    if (!type.IsAbstract && typeof(ISingleSolver).IsAssignableFrom(type))
-                    {
-                        var solver = (ISingleSolver)Activator.CreateInstance(type);
-                        SingleMap.Add(solver.Type, solver);
-                    }
-                    else if (!type.IsAbstract && typeof(IMultiSolver).IsAssignableFrom(type))
-                    {
-                        var solver = (IMultiSolver)Activator.CreateInstance(type);
-                        MultiMap.Add((solver.GetterType, solver.SetterType), solver);
-                    }
-                }
+                var solver = (ISingleSolver)Activator.CreateInstance(type);
+                SingleMap.Add(solver.Type, solver);
+            }
+
+            foreach (var type in TypeUtility.GetTypes(typeof(IMultiSolver)))
+            {
+                var solver = (IMultiSolver)Activator.CreateInstance(type);
+                MultiMap.Add((solver.GetterType, solver.SetterType), solver);
             }
         }
 
