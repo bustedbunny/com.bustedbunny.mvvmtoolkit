@@ -14,11 +14,14 @@ namespace MVVMToolkit.Binding.Generics
 {
     public static class BindingUtility
     {
-        private static readonly Dictionary<(Type, Type), IMultiSolver> MultiMap = new();
-        private static readonly Dictionary<Type, ISingleSolver> SingleMap = new();
+        private static readonly Dictionary<(Type, Type), IMultiSolver> MultiMap;
+        private static readonly Dictionary<Type, ISingleSolver> SingleMap;
 
         static BindingUtility()
         {
+            SingleMap = new();
+            MultiMap = new();
+
             foreach (var type in TypeUtility.GetTypes(typeof(ISingleSolver)))
             {
                 var solver = (ISingleSolver)Activator.CreateInstance(type);
