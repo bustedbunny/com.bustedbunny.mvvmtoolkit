@@ -22,7 +22,7 @@ namespace MVVMToolkit.TypeSerialization
         public static List<Type> GetTypes(Type derivingType)
         {
             var result = new List<Type>();
-            var assets = Resources.LoadAll<TextAsset>($"MVVMToolkit/{derivingType.Name}");
+            var assets = Resources.LoadAll<TextAsset>($"MVVMToolkit/TypeCache/{derivingType.Name}");
             if (assets is null)
             {
                 return result;
