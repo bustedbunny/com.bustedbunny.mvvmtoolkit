@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace MVVMToolkit.DependencyInjection
 {
-    public class ServiceProvider : IServiceProvider
+    public partial class ServiceProvider : IServiceProvider
     {
         private readonly Dictionary<Type, object> _serviceMap = new();
 
@@ -48,12 +48,18 @@ namespace MVVMToolkit.DependencyInjection
         public void Inject()
         {
             const BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-            foreach (var (type, obj) in _serviceMap)
+            foreach (var (_, obj) in _serviceMap)
             {
-                foreach (var field in type.GetFields(flags))
+                var type = obj.GetType();
+                if (!FieldMap.TryGetValue(type.FullName, out var fields))
                 {
-                    if (field.GetCustomAttribute<InjectAttribute>() == null) continue;
-                    var fieldType = field.FieldType;
+                    continue;
+                }
+
+                foreach (var field in fields)
+                {
+                    var fieldInfo = type.GetField(field, flags);
+                    var fieldType = fieldInfo.FieldType;
                     if (!_serviceMap.TryGetValue(fieldType, out var service))
                     {
                         Debug.LogError(
@@ -61,7 +67,7 @@ namespace MVVMToolkit.DependencyInjection
                         continue;
                     }
 
-                    field.SetValue(obj, service);
+                    fieldInfo.SetValue(obj, service);
                 }
             }
         }
