@@ -101,7 +101,7 @@ namespace MVVMToolkit
             // After all services have been registered we do dependency injection
             serviceProvider.Inject();
 
-            // Now we resolve cross references for views and viewModels
+            // Now we call OnInit for views and viewModels
             foreach (var view in _views) view.Attach(messenger, serviceProvider);
             foreach (var viewModel in _viewModels) viewModel.Attach(messenger, serviceProvider);
 
