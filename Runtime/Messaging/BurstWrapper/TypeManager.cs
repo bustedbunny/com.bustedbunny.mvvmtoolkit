@@ -10,6 +10,7 @@ namespace MVVMToolkit.Messaging
 {
     public static partial class TypeManager
     {
+        private const string FolderName = "BurstWrapperTypeCache";
         private static bool _initialized;
 
         private static Dictionary<long, TypeInfo> _typeMap;

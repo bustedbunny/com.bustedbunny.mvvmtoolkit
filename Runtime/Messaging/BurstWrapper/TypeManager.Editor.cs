@@ -9,8 +9,6 @@ namespace MVVMToolkit.Messaging
 {
     public static partial class TypeManager
     {
-        private const string FolderName = "BurstWrapperTypeCache";
-
         [InitializeOnLoadMethod]
         private static void CacheTypes()
         {
