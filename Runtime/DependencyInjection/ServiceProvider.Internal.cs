@@ -14,7 +14,7 @@ namespace MVVMToolkit.DependencyInjection
 
         static ServiceProvider()
         {
-            var rawData = Resources.Load<TextAsset>($"MVVMToolkit/{FileName}");
+            var rawData = Resources.Load<TextAsset>($"MVVMToolkit/{FolderName}/{FileName}");
             var fieldsMap = JsonUtility.FromJson<SerializedFields>(rawData.text);
 
             FieldMap = new(fieldsMap.items.Count);
