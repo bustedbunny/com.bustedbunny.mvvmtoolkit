@@ -7,11 +7,12 @@ namespace MVVMToolkit.Messaging
 
     public class Wrapped<T> where T : unmanaged, IUnmanagedMessage
     {
-        private unsafe Wrapped(byte* ptr) => data = *(T*)ptr;
+        private static readonly Wrapped<T> MessageInstance = new();
 
         private static unsafe Wrapped<T> Init(IntPtr ptr)
         {
-            return new((byte*)ptr);
+            MessageInstance.data = *(T*)ptr;
+            return MessageInstance;
         }
 
         [Preserve]

@@ -18,6 +18,9 @@ namespace MVVMToolkit.Messaging
             _data = new(1024, Allocator.Persistent);
         }
 
+        /// <summary>
+        /// Unwraps all written to buffer messages. Not thread safe.
+        /// </summary>
         public unsafe void Unwrap()
         {
             var ptr = (byte*)_data.GetUnsafeReadOnlyPtr();
