@@ -12,10 +12,10 @@ namespace MVVMToolkit.Messaging
 
         private NativeList<byte> _data;
 
-        public WrapperReference(StrongReferenceMessenger messenger)
+        public WrapperReference(StrongReferenceMessenger messenger, int byteCapacity = 1024)
         {
             _messenger = messenger;
-            _data = new(1024, Allocator.Persistent);
+            _data = new(byteCapacity, Allocator.Persistent);
         }
 
         /// <summary>
