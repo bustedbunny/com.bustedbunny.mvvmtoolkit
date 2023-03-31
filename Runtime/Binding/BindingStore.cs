@@ -33,7 +33,6 @@ namespace MVVMToolkit.Binding
 
     public interface IBindingParser
     {
-        public void PostBindingCallback();
         public void Process(VisualElement element, string key);
         void Dispose();
         char Symbol();

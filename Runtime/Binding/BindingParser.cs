@@ -55,75 +55,74 @@ namespace MVVMToolkit.Binding
 
         private void ParseBindings()
         {
-            Parse<TextElement>(_textStores, static element => element.text);
-            Parse<VisualElement>(_tooltipStores, static element => element.tooltip);
-            ParseMultiple<VisualElement>(_viewDataKeyStores, static element => element.viewDataKey);
-        }
-
-        private void ParseMultiple<T>(List<IBindingParser> stores, Func<T, string> keyGetter) where T : VisualElement
-        {
-            _rootVisualElement.Query<T>().ForEach(element =>
+            _rootVisualElement.Query().ForEach(item =>
             {
-                var key = keyGetter(element);
-                if (string.IsNullOrEmpty(key)) return;
-
-                var bindings = ParsingUtility.GetFormatKeys(key);
-
-                if (bindings is null) return;
-
-                foreach (var binding in bindings)
-                {
-                    foreach (var store in stores)
-                    {
-                        if (binding.StartsWith(store.Symbol()))
-                        {
-                            try
-                            {
-                                store.Process(element, binding[1..]);
-                            }
-                            catch (Exception e)
-                            {
-                                Debug.LogError($"Key that caused error: {binding}. Binding type: {_binding.GetType()}");
-                                Debug.LogException(e);
-                            }
-                        }
-                    }
-                }
+                Parse<TextElement>(item, _textStores, static element => element.text);
+                Parse<VisualElement>(item, _tooltipStores, static element => element.tooltip);
+                ParseMultiple<VisualElement>(item, _viewDataKeyStores, static element => element.viewDataKey);
             });
-            PostBindingCallback(stores);
         }
 
-
-        private void Parse<T>(List<IBindingParser> stores, Func<T, string> keyGetter) where T : VisualElement
+        private void ParseMultiple<T>(VisualElement item, List<IBindingParser> stores, Func<T, string> keyGetter)
+            where T : VisualElement
         {
-            _rootVisualElement.Query<T>().ForEach(element =>
+            if (item is not T target)
             {
-                var key = keyGetter(element);
-                if (string.IsNullOrEmpty(key)) return;
+                return;
+            }
+
+            var key = keyGetter(target);
+            if (string.IsNullOrEmpty(key)) return;
+
+            var bindings = ParsingUtility.GetFormatKeys(key);
+
+            if (bindings is null) return;
+
+            foreach (var binding in bindings)
+            {
                 foreach (var store in stores)
                 {
-                    if (key.StartsWith(store.Symbol()))
+                    if (binding.StartsWith(store.Symbol()))
                     {
                         try
                         {
-                            store.Process(element, key[1..]);
+                            store.Process(target, binding[1..]);
                         }
                         catch (Exception e)
                         {
-                            Debug.LogError($"Key that caused error: {key}. Binding type: {_binding.GetType()}");
+                            Debug.LogError($"Key that caused error: {binding}. Binding type: {_binding.GetType()}");
                             Debug.LogException(e);
                         }
                     }
                 }
-            });
-            PostBindingCallback(stores);
+            }
         }
 
-        private static void PostBindingCallback(List<IBindingParser> stores)
+
+        private void Parse<T>(VisualElement item, List<IBindingParser> stores, Func<T, string> keyGetter)
+            where T : VisualElement
         {
+            if (item is not T target)
+            {
+                return;
+            }
+
+            var key = keyGetter(target);
+            if (string.IsNullOrEmpty(key)) return;
             foreach (var store in stores)
             {
-                store.PostBindingCallback();
+                if (key.StartsWith(store.Symbol()))
+                {
+                    try
+                    {
+                        store.Process(target, key[1..]);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError($"Key that caused error: {key}. Binding type: {_binding.GetType()}");
+                        Debug.LogException(e);
+                    }
+                }
             }
         }
 
