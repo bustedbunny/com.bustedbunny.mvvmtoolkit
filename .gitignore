@@ -58,3 +58,6 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+# Type Cache
+/[Aa]ssets/[Rr]esources/[Mm][Vv][Vv][Mm][Tt]oolkit/*
+/[Aa]ssets/[Rr]esources/[Mm][Vv][Vv][Mm][Tt]oolkit.meta
