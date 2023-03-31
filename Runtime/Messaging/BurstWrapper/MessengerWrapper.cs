@@ -29,6 +29,7 @@ namespace MVVMToolkit.Messaging
         {
             internal NativeList<byte>.ParallelWriter data;
 
+            [Preserve]
             public unsafe void Send<T>(T message) where T : unmanaged
             {
                 var size = sizeof(T);
