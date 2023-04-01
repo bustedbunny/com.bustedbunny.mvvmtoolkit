@@ -14,12 +14,18 @@ namespace MVVMToolkit.Binding.CollectionBinding
             Debug.Assert(ctor != null, nameof(ctor) + " != null");
 
             var pm = source.pickingMode;
+            var name = source.name;
+            var focusable = source.focusable;
+            var tabIndex = source.tabIndex;
 
             var classes = source.GetClasses().ToArray();
             return () =>
             {
                 var result = (VisualElement)ctor.Invoke(null);
                 result.pickingMode = pm;
+                result.name = name;
+                result.focusable = focusable;
+                result.tabIndex = tabIndex;
                 foreach (var className in classes)
                 {
                     result.AddToClassList(className);

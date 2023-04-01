@@ -5,7 +5,6 @@ using MVVMToolkit.Binding;
 using MVVMToolkit.Binding.CollectionBinding;
 using MVVMToolkit.Binding.CollectionBinding.Generics;
 using MVVMToolkit.Binding.CollectionBinding.Utility;
-using MVVMToolkit.Binding.Generics;
 using UnityEngine.UIElements;
 
 // ReSharper disable once CheckNamespace
@@ -64,8 +63,6 @@ namespace MVVMToolkit
                 this.element = element;
             }
         }
-
-        public IReadOnlyDictionary<int, IItemCollectionBinder> Bindigns => _binderMap;
 
         private Dictionary<int, IItemCollectionBinder> _binderMap;
 
