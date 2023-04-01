@@ -1,3 +1,5 @@
 @import url("unity-theme://default");
 
+@import url("/Assets/com.bustedbunny.mvvmtoolkit/Runtime/Resources/MVVMTKDefault.uss");
 @import url("TooltipStyles.uss");
+

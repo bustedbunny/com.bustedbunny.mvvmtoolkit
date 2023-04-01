@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements"
+         xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements"
+         noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/SampleView/Views/CollectionView/CollectionView.uss?fileID=7433441132597879392&amp;guid=c3aff912b80f6d443b99129233e4d24d&amp;type=3#CollectionView"/>
+    <ui:VisualElement style="flex-grow: 1; background-color: rgb(185, 185, 185);">
+        <ui:Button text="Back to TestView" view-data-key="{@OpenTestView}"/>
+
+        <ui:ListView view-data-key="{~Collection:Template} {*CollectionViewBinder}"
+                     virtualization-method="DynamicHeight" style="font-size: 42px; align-items: flex-start;"/>
+        <MVVMToolkit.DataTemplate name="Template">
+            <ui:VisualElement class="template template-container">
+                <ui:Label view-data-key="{:LabelBinder}" class="template template-element"/>
+                <ui:VisualElement view-data-key="{:ImageBinder}" class="template template-flag"/>
+            </ui:VisualElement>
+        </MVVMToolkit.DataTemplate>
+    </ui:VisualElement>
+</ui:UXML>

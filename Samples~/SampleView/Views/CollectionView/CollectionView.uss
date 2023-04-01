@@ -1,0 +1,14 @@
+.template-container {
+    flex-grow: 1;
+    flex-direction: row;
+}
+
+.template-element {
+    height: 100%;
+    flex-grow: 1;
+}
+
+.template-flag {
+    height: 100%;
+    width: 100px;
+}
