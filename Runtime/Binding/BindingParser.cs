@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using MVVMToolkit.Binding.CollectionBinding;
+using MVVMToolkit.Binding.Custom;
 using MVVMToolkit.Binding.Localization;
 using MVVMToolkit.Binding.Tooltips;
 using UnityEngine;
@@ -48,6 +50,9 @@ namespace MVVMToolkit.Binding
             _viewDataKeyStores.Add(new ValueChangedParser(model));
             _viewDataKeyStores.Add(new ReflectionParser(model));
             _viewDataKeyStores.Add(new LocalizationAssetParser(assetTables));
+
+            _viewDataKeyStores.Add(new CollectionParser(model));
+            _viewDataKeyStores.Add(new CustomBindingParser(model));
 
             ParseBindings();
         }

@@ -1,17 +1,16 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using MVVMToolkit.Binding.CollectionBinding.Generics;
 using UnityEngine.UIElements;
 
 namespace MVVMToolkit.Binding.CollectionBinding
 {
-    public class RuntimeTemplate
+    public class RuntimeTemplate : VisualElement
     {
-        public readonly int parentKey;
-        public readonly Func<VisualElement> element;
+        public readonly List<(VisualElement, IItemCollectionBinder)> bindings = new();
 
-        public RuntimeTemplate(int parentKey, Func<VisualElement> element)
+        public void AddBinding(VisualElement element, IItemCollectionBinder binder)
         {
-            this.parentKey = parentKey;
-            this.element = element;
+            bindings.Add((element, binder));
         }
     }
 }
