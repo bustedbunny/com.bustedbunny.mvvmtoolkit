@@ -10,7 +10,7 @@ namespace MVVMToolkit.Messaging
     {
         internal NativeList<byte> data;
 
-        public unsafe void Send<T>(T message) where T : unmanaged
+        public unsafe void Send<T>(T message) where T : unmanaged, IUnmanagedMessage
         {
             var size = sizeof(T);
             var hash = BurstRuntime.GetHashCode64<T>();
@@ -30,7 +30,7 @@ namespace MVVMToolkit.Messaging
             internal NativeList<byte>.ParallelWriter data;
 
             [Preserve]
-            public unsafe void Send<T>(T message) where T : unmanaged
+            public unsafe void Send<T>(T message) where T : unmanaged, IUnmanagedMessage
             {
                 var size = sizeof(T);
                 var hash = BurstRuntime.GetHashCode64<T>();
