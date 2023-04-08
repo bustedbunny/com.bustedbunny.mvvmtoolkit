@@ -3,22 +3,26 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using MVVMToolkit.Binding.Localization.Source;
 using UnityEngine.Localization;
-using UnityEngine.UIElements;
 
 namespace MVVMToolkit.Binding.Localization
 {
-    public class LocalizedTextBinding : IElementBinding
+    public abstract class BaseLocalizedTextBinding : IElementBinding
     {
-        private readonly TextElement _element;
-        private readonly Action<VisualElement, string> _operation;
+        public abstract void Unbind();
+    }
+
+    public class LocalizedTextBinding<T> : BaseLocalizedTextBinding
+    {
+        private readonly T _boundElement;
+        private readonly Action<T, string> _operation;
         private readonly BindingGroup _rootBinding;
         private readonly LocalizedString _localizedString;
 
-        public LocalizedTextBinding(TextElement element, INotifyPropertyChanged binding, LocalizedString ls,
-            Action<VisualElement, string> operation)
+        public LocalizedTextBinding(T boundElement, INotifyPropertyChanged binding, LocalizedString ls,
+            Action<T, string> operation)
         {
             _operation = operation;
-            _element = element;
+            _boundElement = boundElement;
 
             _localizedString = ls;
 
@@ -34,9 +38,9 @@ namespace MVVMToolkit.Binding.Localization
             _localizedString.GetLocalizedStringAsync().Completed += handle => { StringChanged(handle.Result); };
         }
 
-        private void StringChanged(string value) => _operation(_element, value);
+        private void StringChanged(string value) => _operation(_boundElement, value);
 
-        public void Unbind()
+        public override void Unbind()
         {
             _rootBinding.ClearBindings();
             _localizedString.Arguments?.Remove(_rootBinding);

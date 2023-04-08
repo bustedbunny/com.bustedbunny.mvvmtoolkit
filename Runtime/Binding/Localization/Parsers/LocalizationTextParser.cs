@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 namespace MVVMToolkit.Binding.Localization
 {
-    public class LocalizationTextParser : BindingParser<LocalizedTextBinding>
+    public class LocalizationTextParser : BindingParser<BaseLocalizedTextBinding>
     {
         private readonly LocalizedStringTable[] _stringTables;
         private readonly Action<VisualElement, string> _bindingOperation;
@@ -26,7 +26,7 @@ namespace MVVMToolkit.Binding.Localization
             var table = GetMatchingTable(_stringTables, key);
             var ls = new LocalizedString(table, key);
             _lsList.Add(ls);
-            var binding = new LocalizedTextBinding(text, bindingContext, ls, _bindingOperation);
+            var binding = new LocalizedTextBinding<VisualElement>(text, bindingContext, ls, _bindingOperation);
             boundingMap.Add(binding, key);
         }
 
