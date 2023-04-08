@@ -15,8 +15,6 @@ namespace MVVMToolkit.Binding
             bindingContext = binding;
         }
 
-        public virtual void PostBindingCallback() { }
-
         public abstract void Process(VisualElement element, string key);
 
         public virtual void Dispose()
