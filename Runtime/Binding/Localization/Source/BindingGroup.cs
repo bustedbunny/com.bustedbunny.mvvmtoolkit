@@ -15,14 +15,19 @@ namespace MVVMToolkit.Binding.Localization.Source
         public BindingGroup(INotifyPropertyChanged binding, LocalizedString parent)
         {
             Parent = parent;
-            this.binding = binding;
+            _binding = binding;
+
+            Parent.Arguments ??= new List<object>();
+            Parent.Arguments.Add(this);
 
             binding.PropertyChanged += UpdateVariable;
         }
 
-        public void ClearBindings()
+        public void Dispose()
         {
-            foreach (var (_, variable) in variableLookup)
+            Parent.Arguments?.Remove(this);
+
+            foreach (var (_, variable) in _variableLookup)
             {
                 if (variable is BindingGroupVariable group)
                 {
@@ -30,51 +35,46 @@ namespace MVVMToolkit.Binding.Localization.Source
                 }
             }
 
-            variableLookup.Clear();
+            _variableLookup.Clear();
+            _binding.PropertyChanged -= UpdateVariable;
         }
 
-        public void Dispose()
-        {
-            ClearBindings();
-            binding.PropertyChanged -= UpdateVariable;
-        }
+        private readonly INotifyPropertyChanged _binding;
 
-        public INotifyPropertyChanged binding;
-
-        private readonly Dictionary<string, ILocalizationVariable> variableLookup = new();
+        private readonly Dictionary<string, ILocalizationVariable> _variableLookup = new();
 
         private void UpdateVariable(object sender, PropertyChangedEventArgs e)
         {
-            if (variableLookup.TryGetValue(e.PropertyName, out var variable)) variable.Set();
+            if (_variableLookup.TryGetValue(e.PropertyName, out var variable)) variable.Set();
         }
 
         public bool BindGroup(string key, out BindingGroupVariable group)
         {
             group = null;
-            if (variableLookup.TryGetValue(key, out var variable))
+            if (_variableLookup.TryGetValue(key, out var variable))
             {
                 group = (BindingGroupVariable)variable;
                 return true;
             }
 
-            var property = PropertyUtility.GetGetProperty(binding, key);
+            var property = PropertyUtility.GetGetProperty(_binding, key);
 
-            group = new(() => new((INotifyPropertyChanged)property.GetValue(binding), Parent));
-            variableLookup.Add(key, group);
+            group = new(() => new((INotifyPropertyChanged)property.GetValue(_binding), Parent));
+            _variableLookup.Add(key, group);
             return true;
         }
 
         public bool BindVariable(string key, out ILocalizationVariable variable)
         {
-            if (variableLookup.TryGetValue(key, out variable))
+            if (_variableLookup.TryGetValue(key, out variable))
             {
                 return true;
             }
 
-            var property = PropertyUtility.GetGetProperty(binding, key);
+            var property = PropertyUtility.GetGetProperty(_binding, key);
 
-            variable = BindingUtility.LocalizationVariable(property, binding);
-            variableLookup.Add(key, variable);
+            variable = BindingUtility.LocalizationVariable(property, _binding);
+            _variableLookup.Add(key, variable);
             return true;
         }
 
