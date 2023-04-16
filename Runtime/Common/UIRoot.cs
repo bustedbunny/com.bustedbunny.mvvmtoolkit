@@ -6,13 +6,15 @@ using MVVMToolkit.DependencyInjection;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Settings;
+using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 
 namespace MVVMToolkit
 {
     public class UIRoot : MonoBehaviour
     {
-        [SerializeField] private UIDocument uiDocument;
+        [FormerlySerializedAs("uiDocument")] [SerializeField]
+        private UIDocument _initialDocument;
 
         private UIDocument _uiDocument;
 
@@ -23,7 +25,9 @@ namespace MVVMToolkit
             {
                 if (_uiDocument != value)
                 {
+                    // ReSharper disable once Unity.NoNullPropagation
                     value?.rootVisualElement.Add(Root);
+// ReSharper disable once Unity.NoNullPropagation
                     _uiDocument?.rootVisualElement.Remove(Root);
                     _uiDocument = value;
                 }
@@ -35,7 +39,6 @@ namespace MVVMToolkit
         private readonly List<BaseView> _views = new();
         private readonly List<ViewModel> _viewModels = new();
         private ServiceProvider _serviceProvider;
-        private StrongReferenceMessenger _messenger;
 
 
         public const string RootUssClassName = "mvvmtk-root";
@@ -44,13 +47,12 @@ namespace MVVMToolkit
         {
             if (Root is not null) throw new InvalidOperationException("Cannot initialize UIRoot multiple times");
 
-            _messenger = messenger;
             _serviceProvider = serviceProvider;
 
             Root = new();
             Root.AddToClassList(RootUssClassName);
             Root.pickingMode = PickingMode.Ignore;
-            UIDocument = uiDocument;
+            UIDocument = _initialDocument;
 
             GetComponentsInChildren(_viewModels);
             foreach (var viewModel in _viewModels)

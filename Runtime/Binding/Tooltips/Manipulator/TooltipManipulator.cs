@@ -64,19 +64,19 @@ namespace MVVMToolkit.Binding.Tooltips
         private CancellationTokenSource _cts;
 
 
-        private float timeTillShow;
+        private float _timeTillShow;
 
         private void ResetTime()
         {
-            timeTillShow = MVVMTKSettings.Instance.tooltipHoverTime / 1000f;
+            _timeTillShow = MVVMTKSettings.Instance.tooltipHoverTime / 1000f;
         }
 
         private async UniTask ShowTooltipAsync(CancellationToken ct)
         {
-            while (timeTillShow > 0)
+            while (_timeTillShow > 0)
             {
                 if (ct.IsCancellationRequested) return;
-                timeTillShow -= Time.deltaTime;
+                _timeTillShow -= Time.deltaTime;
                 await UniTask.Yield();
             }
 

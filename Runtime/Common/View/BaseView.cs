@@ -19,13 +19,13 @@ namespace MVVMToolkit
         private LocalizedStringTable[] _localizationStringTables;
 
         public LocalizedStringTable[] LocalizedStringTables => _localizationStringTables;
-        [SerializeField] private VisualTreeAsset asset;
-        protected VisualTreeAsset Asset => asset;
-        [SerializeField] private int sortLayer;
-        public int SortLayer => sortLayer;
+        [FormerlySerializedAs("asset")] [SerializeField] private VisualTreeAsset _asset;
+        protected VisualTreeAsset Asset => _asset;
+        [FormerlySerializedAs("sortLayer")] [SerializeField] private int _sortLayer;
+        public int SortLayer => _sortLayer;
 
-        [SerializeField] private ViewModel bindingContext;
-        protected ViewModel BindingContext => bindingContext;
+        [FormerlySerializedAs("bindingContext")] [SerializeField] private ViewModel _bindingContext;
+        protected ViewModel BindingContext => _bindingContext;
         protected BindingParser BindingParser { get; set; }
         public VisualElement RootVisualElement { get; private set; }
 
@@ -35,7 +35,7 @@ namespace MVVMToolkit
 
         protected VisualElement InstantiateAsset()
         {
-            var root = asset.Instantiate();
+            var root = _asset.Instantiate();
             root.pickingMode = PickingMode.Ignore;
             root.name = gameObject.name;
             return root;
