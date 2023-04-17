@@ -1,9 +1,13 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
+using CommunityToolkit.Mvvm.Input;
 using MVVMToolkit.Binding.CollectionBinding.Generics;
+using UnityEngine.Scripting;
 using UnityEngine.UIElements;
 
 namespace MVVMToolkit.Binding.CollectionBinding
 {
+    [Preserve]
     public class ListViewBinder : CollectionBinder<ListView>
     {
         protected override void BindCollection()
@@ -13,6 +17,33 @@ namespace MVVMToolkit.Binding.CollectionBinding
             Collection.unbindItem = CollectionUnbindItem;
             Collection.itemsSource = Data;
             Notifier.CollectionChanged += OnCollectionChanged;
+
+            if (Command is IRelayCommand<IEnumerable<int>> onIndices)
+            {
+                Collection.selectedIndicesChanged += onIndices.Execute;
+            }
+            else if (Command is IRelayCommand<IEnumerable<object>> onChange)
+            {
+                Collection.selectionChanged += onChange.Execute;
+            }
+        }
+
+        protected override void UnbindCollection()
+        {
+            Collection.itemsSource = null;
+            Collection.makeItem = null;
+            Collection.bindItem = null;
+            Collection.unbindItem = null;
+            Notifier.CollectionChanged -= OnCollectionChanged;
+
+            if (Command is IRelayCommand<IEnumerable<int>> onIndices)
+            {
+                Collection.selectedIndicesChanged -= onIndices.Execute;
+            }
+            else if (Command is IRelayCommand<IEnumerable<object>> onChange)
+            {
+                Collection.selectionChanged -= onChange.Execute;
+            }
         }
 
         private void CollectionBindItem(VisualElement element, int i)
@@ -59,15 +90,6 @@ namespace MVVMToolkit.Binding.CollectionBinding
             {
                 Collection.RefreshItems();
             }
-        }
-
-        protected override void UnbindCollection()
-        {
-            Collection.itemsSource = null;
-            Collection.makeItem = null;
-            Collection.bindItem = null;
-            Collection.unbindItem = null;
-            Notifier.CollectionChanged -= OnCollectionChanged;
         }
     }
 }

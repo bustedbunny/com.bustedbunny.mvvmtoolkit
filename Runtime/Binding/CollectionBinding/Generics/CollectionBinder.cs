@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Specialized;
+using CommunityToolkit.Mvvm.Input;
 using UnityEngine.UIElements;
 
 namespace MVVMToolkit.Binding.CollectionBinding.Generics
@@ -13,12 +14,13 @@ namespace MVVMToolkit.Binding.CollectionBinding.Generics
         protected IList Data { get; private set; }
         protected INotifyCollectionChanged Notifier { get; private set; }
         protected DataTemplate DataTemplate { get; private set; }
+        protected IRelayCommand Command { get; private set; }
 
         protected abstract void BindCollection();
         protected abstract void UnbindCollection();
 
 
-        public void Bind(VisualElement view, IList data, DataTemplate template)
+        public void Bind(VisualElement view, IList data, DataTemplate template, IRelayCommand command)
         {
             if (data is not INotifyCollectionChanged notifier)
             {
@@ -30,6 +32,7 @@ namespace MVVMToolkit.Binding.CollectionBinding.Generics
             Notifier = notifier;
             Collection = (T)view;
             DataTemplate = template;
+            Command = command;
             BindCollection();
         }
 
@@ -39,12 +42,13 @@ namespace MVVMToolkit.Binding.CollectionBinding.Generics
             Data = null;
             Notifier = null;
             Collection = null;
+            Command = null;
         }
     }
 
     public interface ICollectionBinder : IElementBinding
     {
         public Type Type { get; }
-        public void Bind(VisualElement view, IList data, DataTemplate template);
+        public void Bind(VisualElement view, IList data, DataTemplate template, IRelayCommand command);
     }
 }

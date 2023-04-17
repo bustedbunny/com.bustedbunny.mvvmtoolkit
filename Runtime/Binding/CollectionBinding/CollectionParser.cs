@@ -12,16 +12,23 @@ namespace MVVMToolkit.Binding.CollectionBinding
 
         public override void Process(VisualElement element, string key)
         {
+            var parent = element.parent;
+            var indexInParent = parent.IndexOf(element);
+            if (parent.childCount <= indexInParent || parent[indexInParent + 1] is not DataTemplate template)
+            {
+                throw new BindingException("No data template was found");
+            }
+
             var keys = key.Split(':');
             var left = keys[0];
-            var right = keys[1];
-            var template = element.parent.Q<DataTemplate>(right);
 
             var binder = CollectionBinderMap.GetBinder(element.GetType());
             ParsingUtility.GetTargetObject(bindingContext, left, out var target, out var propertyName);
             var data = PropertyUtility.GetGetProperty(target, propertyName).GetValue(target);
 
-            binder.Bind(element, (IList)data, template);
+            var commandPath = keys.Length > 1 ? keys[1] : null;
+            var command = commandPath is null ? null : CommandUtility.GetCommand(bindingContext, commandPath);
+            binder.Bind(element, (IList)data, template, command);
 
             boundingMap.Add(binder, key);
         }
