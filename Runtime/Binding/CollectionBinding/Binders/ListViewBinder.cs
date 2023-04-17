@@ -13,16 +13,15 @@ namespace MVVMToolkit.Binding.CollectionBinding
             Collection.unbindItem = CollectionUnbindItem;
             Collection.itemsSource = Data;
             Notifier.CollectionChanged += OnCollectionChanged;
-            
-            
         }
 
         private void CollectionBindItem(VisualElement element, int i)
         {
             var runtimeTemplate = (RuntimeTemplate)element;
+            var item = Collection.itemsSource[i];
             foreach (var (child, binder) in runtimeTemplate.bindings)
             {
-                binder.Bind(Collection.itemsSource[i], child);
+                binder.Bind(item, child);
             }
         }
 
@@ -39,11 +38,13 @@ namespace MVVMToolkit.Binding.CollectionBinding
         {
             if (e.Action is NotifyCollectionChangedAction.Add)
             {
-                Collection.RefreshItem(e.NewStartingIndex);
+                Collection.RefreshItems();
+                // Collection.RefreshItem(e.NewStartingIndex);
             }
             else if (e.Action is NotifyCollectionChangedAction.Remove)
             {
-                Collection.RefreshItem(e.OldStartingIndex);
+                Collection.RefreshItems();
+                // Collection.RefreshItem(e.OldStartingIndex);
             }
             else if (e.Action is NotifyCollectionChangedAction.Move)
             {
