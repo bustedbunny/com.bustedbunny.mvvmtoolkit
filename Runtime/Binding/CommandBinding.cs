@@ -37,7 +37,7 @@ namespace MVVMToolkit.Binding
             var commandPath = selectors[0];
             if (!commandPath.EndsWith("Command"))
             {
-                commandPath = commandPath + "Command";
+                commandPath += "Command";
             }
 
             ParsingUtility.GetTargetObject(boundObject, commandPath, out var target, out var propertyName);
