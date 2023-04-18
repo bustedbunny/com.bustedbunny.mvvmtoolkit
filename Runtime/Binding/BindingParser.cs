@@ -60,12 +60,30 @@ namespace MVVMToolkit.Binding
 
         private void ParseBindings()
         {
-            _rootVisualElement.Query().ForEach(item =>
+            Func<TextElement, string> textGetter = static element => element.text;
+            Func<VisualElement, string> tooltipGetter = static element => element.tooltip;
+            Func<VisualElement, string> viewDataKeyGetter = static element => element.viewDataKey;
+            ParseAll(_rootVisualElement, item =>
             {
-                Parse<TextElement>(item, _textStores, static element => element.text);
-                Parse<VisualElement>(item, _tooltipStores, static element => element.tooltip);
-                ParseMultiple<VisualElement>(item, _viewDataKeyStores, static element => element.viewDataKey);
+                Parse(item, _textStores, textGetter);
+                Parse(item, _tooltipStores, tooltipGetter);
+                ParseMultiple(item, _viewDataKeyStores, viewDataKeyGetter);
             });
+        }
+
+        private static void ParseAll(VisualElement root, Action<VisualElement> funcCall)
+        {
+            foreach (var element in root.Children())
+            {
+                funcCall(element);
+                if (element is not DataTemplate)
+                {
+                    foreach (var child in element.Children())
+                    {
+                        ParseAll(child, funcCall);
+                    }
+                }
+            }
         }
 
         private void ParseMultiple<T>(VisualElement item, List<IBindingParser> stores, Func<T, string> keyGetter)
