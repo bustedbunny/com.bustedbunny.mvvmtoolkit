@@ -36,7 +36,7 @@ namespace MVVMToolkit.Binding.CollectionBinding.Generics
             BindCollection();
         }
 
-        public void Unbind()
+        public void Dispose()
         {
             UnbindCollection();
             Data = null;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine.UIElements;
@@ -21,7 +22,7 @@ namespace MVVMToolkit.Binding
         {
             foreach (var (bind, _) in boundingMap)
             {
-                bind.Unbind();
+                bind.Dispose();
             }
 
             boundingMap.Clear();
@@ -36,8 +37,8 @@ namespace MVVMToolkit.Binding
         char Symbol();
     }
 
-    public interface IElementBinding
+    public interface IElementBinding : IDisposable
     {
-        public void Unbind();
+        // public void Dispose();
     }
 }

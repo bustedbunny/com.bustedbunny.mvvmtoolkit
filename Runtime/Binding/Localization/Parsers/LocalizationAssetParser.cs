@@ -95,7 +95,7 @@ namespace MVVMToolkit.Binding.Localization
             _operation(obj.Result);
         }
 
-        public void Unbind()
+        public void Dispose()
         {
             _table.TableChanged -= OnTableChange;
         }

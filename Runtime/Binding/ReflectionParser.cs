@@ -57,7 +57,7 @@ namespace MVVMToolkit.Binding
         }
 
 
-        public void Unbind()
+        public void Dispose()
         {
             if (_binding is not null)
             {

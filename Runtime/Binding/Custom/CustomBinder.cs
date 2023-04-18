@@ -18,7 +18,7 @@ namespace MVVMToolkit.Binding.Custom
             BindElement();
         }
 
-        public void Unbind()
+        public void Dispose()
         {
             UnbindElement();
             Element = null;

@@ -84,7 +84,7 @@ namespace MVVMToolkit.Binding
         }
 
 
-        public void Unbind()
+        public void Dispose()
         {
             Command.CanExecuteChanged -= SetCanExecute;
             if (Element is Button button)

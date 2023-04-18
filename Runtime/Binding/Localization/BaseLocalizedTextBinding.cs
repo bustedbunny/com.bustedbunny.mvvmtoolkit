@@ -7,7 +7,7 @@ namespace MVVMToolkit.Binding.Localization
 {
     public abstract class BaseLocalizedTextBinding : IElementBinding
     {
-        public abstract void Unbind();
+        public abstract void Dispose();
     }
 
     public class LocalizedTextBinding<T> : BaseLocalizedTextBinding
@@ -28,7 +28,7 @@ namespace MVVMToolkit.Binding.Localization
 
         private void StringChanged(string value) => _operation(_boundElement, value);
 
-        public override void Unbind()
+        public override void Dispose()
         {
             _rootBinding.Dispose();
         }
