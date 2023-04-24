@@ -1,9 +1,30 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using System.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using UnityEngine.Assertions;
 
 namespace MVVMToolkit.Binding
 {
     public static class CommandUtility
     {
+        public static void Parse(INotifyPropertyChanged bindingContext, string key, out IRelayCommand command,
+            out object argument)
+        {
+            Assert.IsNotNull(bindingContext);
+            Throw.ThrowNullOrEmpty(key);
+
+            var keys = key.Split(':');
+
+            Assert.IsTrue(keys.Length is <= 2 and > 0);
+
+            var commandPath = keys[0];
+            FormatCommandPath(ref commandPath);
+            command = GetCommand(bindingContext, commandPath);
+
+            Assert.IsNotNull(command);
+
+            argument = keys.Length == 2 ? GetArgument(keys[1]) : null;
+        }
+
         public static void FormatCommandPath(ref string prompt)
         {
             const string suffix = "Command";
@@ -39,8 +60,8 @@ namespace MVVMToolkit.Binding
 
         public static IRelayCommand GetCommand(object source, string prompt)
         {
-            FormatCommandPath(ref prompt);
-            var property = PropertyUtility.GetGetProperty(source, prompt);
+            ParsingUtility.GetTargetObject(source, prompt, out var target, out var propertyName);
+            var property = PropertyUtility.GetGetProperty(target, propertyName);
             return property.GetValue(source) as IRelayCommand;
         }
 
