@@ -30,10 +30,13 @@ namespace MVVMToolkit.Binding
     }
 
 
-    public interface IBindingParser
+    public interface IBindingParser : IParser
     {
         public void Process(VisualElement element, string key);
-        void Dispose();
+    }
+
+    public interface IParser : IDisposable
+    {
         char Symbol();
     }
 

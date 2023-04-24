@@ -12,47 +12,36 @@ using UnityEngine.UIElements;
 
 namespace MVVMToolkit.Binding
 {
-    public class BindingParser : IDisposable
+    public class BindingParser : BaseParser<IBindingParser>
     {
         private readonly VisualElement _rootVisualElement;
 
-        private readonly List<List<IBindingParser>> _stores = new();
 
-        private readonly List<IBindingParser> _textStores = new();
-        private readonly List<IBindingParser> _tooltipStores = new();
-        private readonly List<IBindingParser> _viewDataKeyStores = new();
-        private readonly INotifyPropertyChanged _binding;
-
-        public BindingParser(INotifyPropertyChanged model, VisualElement root, LocalizedStringTable[] stringTables,
-            LocalizedAssetTable[] assetTables)
+        public BindingParser(INotifyPropertyChanged bindingContext, VisualElement root,
+            LocalizedStringTable[] stringTables,
+            LocalizedAssetTable[] assetTables) : base(bindingContext)
         {
-            _binding = model;
-
-            _stores.Add(_textStores);
-            _stores.Add(_tooltipStores);
-            _stores.Add(_viewDataKeyStores);
-
             _rootVisualElement = root;
 
             if (stringTables.Length > 0)
             {
                 // UnsafeAs allows to skip some checks
-                _textStores.Add(new LocalizationTextParser(model, stringTables,
+                TextStores.Add(new LocalizationTextParser(Binding, stringTables,
                     static (element, s) => Unsafe.As<TextElement>(element).text = s));
-                _tooltipStores.Add(new TooltipLocalizationParser(model, stringTables,
+                TooltipStores.Add(new TooltipLocalizationParser(Binding, stringTables,
                     TooltipUtility.TooltipBindingOperation));
             }
 
-            _textStores.Add(new StringFormatParser(model, static (element, s) => ((TextElement)element).text = s));
-            _tooltipStores.Add(new TooltipFormatParser(model, TooltipUtility.TooltipBindingOperation));
+            TextStores.Add(new StringFormatParser(Binding, static (element, s) => ((TextElement)element).text = s));
+            TooltipStores.Add(new TooltipFormatParser(Binding, TooltipUtility.TooltipBindingOperation));
 
-            _viewDataKeyStores.Add(new ClickParser(model));
-            _viewDataKeyStores.Add(new ValueChangedParser(model));
-            _viewDataKeyStores.Add(new ReflectionParser(model));
-            _viewDataKeyStores.Add(new LocalizationAssetParser(assetTables));
+            ViewDataKeyStores.Add(new ClickParser(Binding));
+            ViewDataKeyStores.Add(new ValueChangedParser(Binding));
+            ViewDataKeyStores.Add(new ReflectionParser(Binding));
+            ViewDataKeyStores.Add(new LocalizationAssetParser(assetTables));
 
-            _viewDataKeyStores.Add(new CollectionParser(model));
-            _viewDataKeyStores.Add(new CustomBindingParser(model));
+            ViewDataKeyStores.Add(new CollectionParser(Binding));
+            ViewDataKeyStores.Add(new CustomBindingParser(Binding));
 
             ParseBindings();
         }
@@ -60,28 +49,22 @@ namespace MVVMToolkit.Binding
 
         private void ParseBindings()
         {
-            Func<TextElement, string> textGetter = static element => element.text;
-            Func<VisualElement, string> tooltipGetter = static element => element.tooltip;
-            Func<VisualElement, string> viewDataKeyGetter = static element => element.viewDataKey;
             ParseAll(_rootVisualElement, item =>
             {
-                Parse(item, _textStores, textGetter);
-                Parse(item, _tooltipStores, tooltipGetter);
-                ParseMultiple(item, _viewDataKeyStores, viewDataKeyGetter);
+                Parse(item, TextStores, textGetter);
+                Parse(item, TooltipStores, tooltipGetter);
+                ParseMultiple(item, ViewDataKeyStores, viewDataKeyGetter);
             });
         }
 
         private static void ParseAll(VisualElement root, Action<VisualElement> funcCall)
         {
+            funcCall(root);
             foreach (var element in root.Children())
             {
-                funcCall(element);
                 if (element is not DataTemplate)
                 {
-                    foreach (var child in element.Children())
-                    {
-                        ParseAll(child, funcCall);
-                    }
+                    ParseAll(element, funcCall);
                 }
             }
         }
@@ -113,7 +96,7 @@ namespace MVVMToolkit.Binding
                         }
                         catch (Exception e)
                         {
-                            Debug.LogError($"Key that caused error: {binding}. Binding type: {_binding.GetType()}");
+                            Debug.LogError($"Key that caused error: {binding}. Binding type: {Binding.GetType()}");
                             Debug.LogException(e);
                         }
                     }
@@ -142,20 +125,9 @@ namespace MVVMToolkit.Binding
                     }
                     catch (Exception e)
                     {
-                        Debug.LogError($"Key that caused error: {key}. Binding type: {_binding.GetType()}");
+                        Debug.LogError($"Key that caused error: {key}. Binding type: {Binding.GetType()}");
                         Debug.LogException(e);
                     }
-                }
-            }
-        }
-
-        public void Dispose()
-        {
-            foreach (var stores in _stores)
-            {
-                foreach (var bindingStore in stores)
-                {
-                    bindingStore.Dispose();
                 }
             }
         }
