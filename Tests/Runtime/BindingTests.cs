@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace MVVMToolkit.RuntimeTests
 {
-    public class BindingTests
+    public static class BindingTests
     {
         [Test]
         public static void TestFormatting()
