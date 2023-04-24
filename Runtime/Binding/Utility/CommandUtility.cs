@@ -13,9 +13,27 @@ namespace MVVMToolkit.Binding
             }
 
             const string prefix = "On";
-            if (prompt.StartsWith(prefix))
+            var lastIndex = prompt.LastIndexOf('.');
+            if (lastIndex != -1)
             {
-                prompt = prompt[2..];
+                lastIndex++;
+
+                var substring = prompt[lastIndex..];
+
+
+                if (substring.StartsWith(prefix))
+                {
+                    substring = substring[2..];
+
+                    prompt = prompt[..lastIndex] + substring;
+                }
+            }
+            else
+            {
+                if (prompt.StartsWith(prefix))
+                {
+                    prompt = prompt[2..];
+                }
             }
         }
 
@@ -24,6 +42,14 @@ namespace MVVMToolkit.Binding
             FormatCommandPath(ref prompt);
             var property = PropertyUtility.GetGetProperty(source, prompt);
             return property.GetValue(source) as IRelayCommand;
+        }
+
+        public static object GetArgument(string key)
+        {
+            if (bool.TryParse(key, out var boolResult)) return boolResult;
+            if (int.TryParse(key, out var intResult)) return intResult;
+            if (float.TryParse(key, out var floatResult)) return floatResult;
+            return key;
         }
     }
 }
