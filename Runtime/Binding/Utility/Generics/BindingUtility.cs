@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Reflection;
 using MVVMToolkit.Binding.Localization;
 using MVVMToolkit.Binding.Localization.Source;
 using MVVMToolkit.TypeSerialization;
-using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.UIElements;
+using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
 
 namespace MVVMToolkit.Binding.Generics
@@ -34,7 +35,6 @@ namespace MVVMToolkit.Binding.Generics
                 MultiMap.Add((solver.GetterType, solver.SetterType), solver);
             }
         }
-
 
         public static Action SetAction(PropertyInfo get, object source, PropertyInfo set, object target)
         {
@@ -63,8 +63,9 @@ namespace MVVMToolkit.Binding.Generics
                 WarnNoSolverMulti(getType, setType);
             }
 
-            // Reflection fallback
-            return () => { set.SetValue(target, get.GetValue(source)); };
+            // Generic fallback
+            var fallback = FallbackUtility.CreateSolver(source.GetType(), getType, target.GetType(), setType);
+            return fallback.Solve(getMethod, source, setMethod, target);
         }
 
         public static ILocalizationVariable LocalizationVariable(PropertyInfo property, object binding)
@@ -76,9 +77,12 @@ namespace MVVMToolkit.Binding.Generics
                 return solver.SolveLocalization(getMethod, binding);
             }
 
-            // Reflection fallback
+            // Generic fallback
             WarnNoSolverSingle(property.PropertyType);
-            return new LocalizationVariable<string>(() => property.GetValue(binding).ToString());
+            var localizationType = typeof(LocalizationVariable<>).MakeGenericType(getMethod.ReturnType);
+            var delegateType = typeof(Func<>).MakeGenericType(getMethod.ReturnType);
+            var del = getMethod.CreateDelegate(delegateType, binding);
+            return (ILocalizationVariable)Activator.CreateInstance(localizationType, del);
         }
 
         public static ValueChangedBinding ValueChangedBinding(Type valueChangedType, VisualElement element, string key,
@@ -93,8 +97,6 @@ namespace MVVMToolkit.Binding.Generics
                 {
                     return solver.SolveValueChanged(element, binding, property);
                 }
-
-                WarnNoSolverSingle(valueChangedType);
             }
             else
             {
@@ -102,8 +104,11 @@ namespace MVVMToolkit.Binding.Generics
                                            $"{property.PropertyType.Name} {valueChangedType.Name}.");
             }
 
-            throw new BindingException(
-                $"No IGenericsSolver found for type {valueChangedType.Name}. ValueChanged binding must have one.");
+            // Generic fallback
+            WarnNoSolverSingle(valueChangedType);
+            var genericType = typeof(ValueChangedFallback<>).MakeGenericType(valueChangedType);
+            var fallback = (IValueChangedFallback)Activator.CreateInstance(genericType);
+            return fallback.SolveValueChanged(element, binding, property);
         }
 
         public static Action StringFormatSetAction(object binding, string format, object[] array, int index,
@@ -118,11 +123,12 @@ namespace MVVMToolkit.Binding.Generics
                 return solver.SolveArraySetElement(property, target, array, index);
             }
 
-            var targetCopy = target;
-
-            // Reflection fallback
+            // Generic fallback
             WarnNoSolverSingle(property.PropertyType);
-            return () => array[index] = property.GetValue(targetCopy);
+
+            var type = typeof(StringFormatFallback<>).MakeGenericType(property.PropertyType);
+            var fallback = (IStringFormatFallback)Activator.CreateInstance(type);
+            return fallback.SolveArraySetElement(property, target, array, index);
         }
 
         public static LocalizedAssetBinding AssetBinding(PropertyInfo setProp, object target, LocalizedAssetTable table,
@@ -138,20 +144,26 @@ namespace MVVMToolkit.Binding.Generics
                 return new(table, key, assetSetter);
             }
 
+            // Generic fallback
             WarnNoSolverMulti(assetType, setterType);
-            assetSetter = o => setProp.SetValue(target, o);
+
+            var type = typeof(AssetSetterFallback<>).MakeGenericType(setterType);
+            var fallback = (IAssetSetterFallback)Activator.CreateInstance(type);
+            assetSetter = fallback.ResolveAssetSetter(setProp, target);
             return new(table, key, assetSetter);
         }
 
+        [Conditional("MVVMTK_IL2CPP_WARNINGS")]
         private static void WarnNoSolverSingle(Type type)
         {
-            Debug.LogWarning($"A reflection fallback with type {type.Name} was used." +
+            Debug.LogWarning($"A generic fallback with type {type.Name} was used." +
                              $" Implement {typeof(SingleSolver<>).Name}<{type.Name}>.");
         }
 
+        [Conditional("MVVMTK_IL2CPP_WARNINGS")]
         private static void WarnNoSolverMulti(Type get, Type set)
         {
-            Debug.LogWarning($"A reflection fallback for type pair {get.Name}->{set.Name} was used." +
+            Debug.LogWarning($"A generic fallback for type pair {get.Name}->{set.Name} was used." +
                              $" Implement {typeof(MultiSolver<,>).Name}<{get.Name}, {set.Name}>.");
         }
     }

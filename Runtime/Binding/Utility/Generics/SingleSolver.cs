@@ -46,8 +46,10 @@ namespace MVVMToolkit.Binding.Generics
         public Action SolveArraySetElement(PropertyInfo propertyInfo, object source, object[] array, int index)
         {
             var get = HelpersGenerics.Get<T0>(propertyInfo.GetGetMethod(), source);
+            var box = new BoxedValue<T0>();
+            array[index] = box;
 
-            return () => array[index] = get();
+            return () => box.value = get();
         }
     }
 }

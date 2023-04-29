@@ -19,12 +19,20 @@ namespace MVVMToolkit
         private LocalizedStringTable[] _localizationStringTables;
 
         public LocalizedStringTable[] LocalizedStringTables => _localizationStringTables;
-        [FormerlySerializedAs("asset")] [SerializeField] private VisualTreeAsset _asset;
+
+        [FormerlySerializedAs("asset")] [SerializeField]
+        private VisualTreeAsset _asset;
+
         protected VisualTreeAsset Asset => _asset;
-        [FormerlySerializedAs("sortLayer")] [SerializeField] private int _sortLayer;
+
+        [FormerlySerializedAs("sortLayer")] [SerializeField]
+        private int _sortLayer;
+
         public int SortLayer => _sortLayer;
 
-        [FormerlySerializedAs("bindingContext")] [SerializeField] private ViewModel _bindingContext;
+        [FormerlySerializedAs("bindingContext")] [SerializeField]
+        private ViewModel _bindingContext;
+
         protected ViewModel BindingContext => _bindingContext;
         protected BindingParser BindingParser { get; set; }
         public VisualElement RootVisualElement { get; private set; }

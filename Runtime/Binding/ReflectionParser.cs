@@ -36,11 +36,7 @@ namespace MVVMToolkit.Binding
                 out var getTarget, out var setTarget,
                 out var getProp, out var setProp);
 
-            Assert.AreEqual(setProp.PropertyType, getProp.PropertyType);
-
             var propertyName = getProp.Name;
-
-
             var setAction = BindingUtility.SetAction(getProp, getTarget, setProp, setTarget);
 
             _action = (_, args) =>
