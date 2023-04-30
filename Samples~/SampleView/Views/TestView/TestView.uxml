@@ -5,9 +5,7 @@
          editor-extension-mode="False">
     <ui:ScrollView>
         <ui:VisualElement style="font-size: 42px; align-items: flex-start;">
-            <ui:Button text="To CollectionView" view-data-key="{@OpenCollectionView}"/>
-
-            <ui:Image view-data-key="{#Flag&gt;image}"/>
+            <ui:Image view-data-key="{#Flag>image}"/>
             <ui:Label text="#Text"/>
             <ui:Label text="#VariableTest"/>
             <ui:Label text="Localization tooltip" tooltip="#TooltipTest"/>

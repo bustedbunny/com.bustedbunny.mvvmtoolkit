@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using MVVMToolkit;
 using MVVMToolkit.Messaging;
-using SampleView.CollectionView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -53,13 +52,6 @@ namespace SampleView.TestView
                     NestedFloat = Random.Range(500, 1000f)
                 }
             };
-        }
-
-        [RelayCommand]
-        private void OpenCollectionView()
-        {
-            Messenger.Send(new CloseViewsMessage());
-            Messenger.Send(new OpenCollectionViewMessage());
         }
     }
 
