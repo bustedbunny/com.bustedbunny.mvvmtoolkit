@@ -1,25 +1,26 @@
 {
-    "name": "com.bustedbunny.mvptoolkit.tests",
-    "rootNamespace": "MVVMToolkit.RuntimeTests",
-    "references": [
-        "GUID:27619889b8ba8c24980f49ee34dbb44a",
-        "GUID:0acc523941302664db1f4e527237feb3",
-        "GUID:7044ba7f25757f44c8916120cfc27a88",
-        "GUID:f51ebe6a0ceec4240a699833d6309b23",
-        "GUID:e0cd26848372d4e5c891c569017e11f1"
-    ],
-    "includePlatforms": [],
-    "excludePlatforms": [],
-    "allowUnsafeCode": false,
-    "overrideReferences": true,
-    "precompiledReferences": [
-        "nunit.framework.dll",
-        "CommunityToolkit.Mvvm.dll"
-    ],
-    "autoReferenced": false,
-    "defineConstraints": [
-        "UNITY_INCLUDE_TESTS"
-    ],
-    "versionDefines": [],
-    "noEngineReferences": false
+  "name": "com.bustedbunny.mvptoolkit.tests",
+  "rootNamespace": "MVVMToolkit.RuntimeTests",
+  "references": [
+    "GUID:27619889b8ba8c24980f49ee34dbb44a",
+    "GUID:0acc523941302664db1f4e527237feb3",
+    "GUID:c0dd0d10738d4ad4a9de57c559d0ca1b",
+    "GUID:7044ba7f25757f44c8916120cfc27a88",
+    "GUID:f51ebe6a0ceec4240a699833d6309b23",
+    "GUID:e0cd26848372d4e5c891c569017e11f1"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": true,
+  "precompiledReferences": [
+    "nunit.framework.dll",
+    "CommunityToolkit.Mvvm.dll"
+  ],
+  "autoReferenced": false,
+  "defineConstraints": [
+    "UNITY_INCLUDE_TESTS"
+  ],
+  "versionDefines": [],
+  "noEngineReferences": false
 }
