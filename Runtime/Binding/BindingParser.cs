@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using MVVMToolkit.Binding.CollectionBinding;
 using MVVMToolkit.Binding.Custom;
 using MVVMToolkit.Binding.Localization;
 using MVVMToolkit.Binding.Tooltips;
@@ -40,7 +39,6 @@ namespace MVVMToolkit.Binding
             ViewDataKeyStores.Add(new ReflectionParser(Binding));
             ViewDataKeyStores.Add(new LocalizationAssetParser(assetTables));
 
-            ViewDataKeyStores.Add(new CollectionParser(Binding));
             ViewDataKeyStores.Add(new CustomBindingParser(Binding));
 
             ParseBindings();
@@ -62,10 +60,7 @@ namespace MVVMToolkit.Binding
             funcCall(root);
             foreach (var element in root.Children())
             {
-                if (element is not DataTemplate)
-                {
-                    ParseAll(element, funcCall);
-                }
+                ParseAll(element, funcCall);
             }
         }
 
