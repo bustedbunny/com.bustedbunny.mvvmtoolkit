@@ -12,6 +12,7 @@ many breaking changes might be pushed without a warning.
 ## Table of contents
 
 - [General requirements](#general-requirements)
+- [Prerequisites](#prerequisites)
 - [Make a basic view](#make-a-basic-view)
 - [Enabling/Disabling View](#enablingdisabling-view)
 - [Localization text binding](#localization-text-binding)
@@ -49,7 +50,7 @@ many breaking changes might be pushed without a warning.
   (as long as they support NS 2.1 and UniTask),
   2022.2 also supports Roslyn 4.0.1 API which gives an
   opportunity to use all power of CommunityToolkit.mvvm source generators.
-* `#,` `>` and `@` symbols are reserved in Localization package operators
+* `#`, `>` and `@` symbols are reserved in Localization package operators
 
 ### Installation
 
@@ -88,6 +89,13 @@ com.bustedbunny.mvvmtoolkit
 You can add `https://github.com/bustedbunny/com.bustedbunny.mvvmtoolkit.git` to the Package Manager.
 
 </details>
+
+### Prerequisites
+
+In your TSS (Theme Style Sheet) asset you must include MVVMTK Default stylesheet.
+It's included in package, so you can find it via search.
+
+![image](https://github.com/bustedbunny/com.bustedbunny.mvvmtoolkit/assets/30902981/3a99cbc0-30ea-4c0a-8ef9-6617411252c5)
 
 ### Make a basic view
 
@@ -164,9 +172,10 @@ After we attached this script to `UIRoot` we can start PlayMode, but View will n
 
 ### Enabling/Disabling View
 
-This framework heavily relies on CommunityToolkit.MVVMToolkit Message system.
+_This framework is meant to use CommunityToolkit.MVVM Message system.
+But it's not necessary and if you want to control your navigation differently it's up to you._
 
-[You can read more here.](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/mvvm/messenger)
+[You can read more about CommunityToolkit.MVVM here.](https://learn.microsoft.com/en-us/dotnet/communitytoolkit/mvvm/messenger)
 
 In order to enable any `View` we will need to implement a message:
 
@@ -201,6 +210,9 @@ public class TestView : BaseView
     }
 }
 ```
+
+_Or you can enable/disable BaseView manually in any way you want if you are not interested
+in messaging system._
 
 Now we need to use Messenger and send this message:
 
@@ -502,9 +514,18 @@ UnityEngine.UIElements.Image.image
 ### Binding Types Limitations
 
 In order to create bindings package relies
-on explicitly declared generic types.
+on explicitly declared generic types
+and if it can't find one implements generic fallback.
 
-There are 2 types of those:
+Generic fallbacks are mostly fine with Mono scripting backend as
+JIT properly compiles them and performance different is rather insignificant (but still exists).
+
+But with IL2CPP fallbacks result in huge performance degradation compared to explicitly declared types.
+
+In order to enable warnings when fallbacks are used define `MVVMTK_FALLBACK_WARNINGS` in your project settings.
+Warnings will suggest what type you need to implement to improve performance.
+
+There are 2 types of explicit binding solvers:
 
 1. `ISingleSolver` - provides binding support for specified type.
 2. `IMultiSolver` - provides binding support for
@@ -524,29 +545,12 @@ solvers implemented in package:
 ```
 
 In order to support other types you need to implement solvers yourself
-simply inheriting from `SingleSolver<T>`.
-
-Some bindings rely on `IMultiSolver` and they must be implemented manually.
-For example this `MultiSolver` provides a way to convert `Texture2D`
-to `Texture`:
+simply inheriting from `SingleSolver<T>` or `MultiSolver<TFrom,TTo>`.
 
 ```csharp
 // Converter need to be preserved in case you use code stripping
 [Preserve]
-public class TextureToTexture2DConverter : MultiSolver<Texture2D, Texture>
-{
-    protected override Texture Convert(Texture2D value) => value;
-}
+public class TextureToTexture2DConverter : MultiSolver<Texture2D, Texture> { }
 ```
 
-`MultiSolver` requires to implement `Convert` method in which you
-specify how `Texture2D` is assigned to `Texture` setter.
-
-`IMultiSolver` are required for **Localized Asset Binding** or when
-you want to bind something that does not match types. For example `IStyle`
-properties usually use very specific types which are not convenient
-to work with in `ViewModel`, but can be implicitly converted.
-
-Most of the time when solvers are not available reflection fallback
-will be used with a warning. While fully functional, fallbacks are
-performance heavy and generate a lot of garbage when used.
+`IMultiSolver` are only required for **Localized Asset Binding**.
