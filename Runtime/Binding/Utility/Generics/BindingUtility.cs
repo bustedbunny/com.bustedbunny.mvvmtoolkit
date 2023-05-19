@@ -153,14 +153,14 @@ namespace MVVMToolkit.Binding.Generics
             return new(table, key, assetSetter);
         }
 
-        [Conditional("MVVMTK_IL2CPP_WARNINGS")]
+        [Conditional("MVVMTK_FALLBACK_WARNINGS")]
         private static void WarnNoSolverSingle(Type type)
         {
             Debug.LogWarning($"A generic fallback with type {type.Name} was used." +
                              $" Implement {typeof(SingleSolver<>).Name}<{type.Name}>.");
         }
 
-        [Conditional("MVVMTK_IL2CPP_WARNINGS")]
+        [Conditional("MVVMTK_FALLBACK_WARNINGS")]
         private static void WarnNoSolverMulti(Type get, Type set)
         {
             Debug.LogWarning($"A generic fallback for type pair {get.Name}->{set.Name} was used." +
