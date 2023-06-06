@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq.Expressions;
 using MVVMToolkit.Binding.Generics;
 using NUnit.Framework;
 using Unity.PerformanceTesting;
@@ -10,33 +9,20 @@ namespace MVVMToolkit.RuntimeTests
     {
         private class Source
         {
-            public float _value;
-
-            public float Value
-            {
-                get => _value;
-                set => _value = value;
-            }
+            public float Value { get; set; }
         }
 
         private class Target
         {
-            public float _value;
-
-            public float Value
-            {
-                get => _value;
-                set => _value = value;
-            }
+            public float Value { get; set; }
         }
 
         private const float SampleValue = 49.5f;
         private const string PropertyName = nameof(Source.Value);
-        private const string FieldName = nameof(Source._value);
 
-        private const int Warmup = 500;
+        private const int Warmup = 10;
         private const int MeasurementCount = 5;
-        private const int IterationCount = 10000;
+        private const int IterationCount = 1000;
 
         [Test, Performance]
         public static void DirectProperty()
